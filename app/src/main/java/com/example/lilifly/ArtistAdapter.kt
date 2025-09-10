@@ -45,9 +45,9 @@ class ArtistAdapter(private val list: List<Artist>, var listener: Listener) :
             .into(holder.imageView)
 
         // Временно используем заглушку
-       holder.cardView.setOnClickListener {
+        holder.cardView.setOnClickListener {
 
-       }
+        }
     }
 
     override fun getItemCount(): Int = list.size

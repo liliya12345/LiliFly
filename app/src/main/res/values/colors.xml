@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Modern color palette -->
+    <color name="background">#FFF5F5F5</color>
+    <color name="card_background">#FFFFFFFF</color>
+    <color name="text_primary">#FF1A1A1A</color>
+    <color name="text_secondary">#FF666666</color>
+    <color name="divider">#1A000000</color>
+    <color name="gold">#FFFFD700</color>
+    <color name="gold_light">#33FFD700</color>
+    <color name="rating_background">#33000000</color>
+    <color name="spotify_green">#FF1DB954</color>
+    <color name="accent">#FF6200EE</color>
 </resources>

@@ -41,7 +41,15 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
         binding.rvArtist.layoutManager = LinearLayoutManager(this)
 
         startAuth()
+
+        binding.btn.setOnClickListener {
+            var search = binding.edText.text
+            searchByArtist(search.toString())
+
+        }
+
     }
+
 
     private fun startAuth() {
         val request = AuthorizationRequest.Builder(
@@ -104,8 +112,66 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
         })
     }
 
+    private fun searchByArtist(qwert: String) {
+        val url = "https://api.spotify.com/v1/search?q=$qwert&type=artist"
+        val jsonObjectRequest = object : JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response ->
+                Log.i("SpotifyAPI", "Response: ${response.toString()}")
+
+                try {
+                    val listArtist = mutableListOf<Artist>()
+                    val artists = response.getJSONObject("artists")
+                    val artistsArray=artists.getJSONArray("items")
+                    for (i in 0 until artistsArray.length()) {
+                        val artist = artistsArray.getJSONObject(i)
+                        val artistName = artist.getString("name")
+                        val followers = artist.getJSONObject("followers").getInt("total")
+                        val popularity = artist.getInt("popularity")
+
+                        // Получаем изображение
+                        var imageUrl = ""
+                        val imagesArray = artist.getJSONArray("images")
+                        if (imagesArray.length() > 0) {
+                            val firstImage = imagesArray.getJSONObject(0)
+                            imageUrl = firstImage.getString("url")
+                        }
+                        listArtist.add(Artist(artistName, followers, popularity, imageUrl))
+                    }
+
+                    // Устанавливаем адаптер в главном потоке
+                    runOnUiThread {
+                        binding.rvArtist.adapter = ArtistAdapter(listArtist, this@MainActivity)
+                        Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
+                    }
+
+                } catch (e: Exception) {
+                    Log.e("SpotifyAPI", "Error parsing JSON: ${e.message}")
+                    e.printStackTrace()
+                }
+            },
+            { error ->
+                Log.e("SpotifyAPI", "Error: ${error.message}")
+                error.networkResponse?.let {
+                    Log.e("SpotifyAPI", "Status code: ${it.statusCode}")
+                    Log.e("SpotifyAPI", "Response data: ${String(it.data)}")
+                }
+            }
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Bearer $beaver"
+                headers["Content-Type"] = "application/json"
+                return headers
+            }
+        }
+
+        requestQueue.add(jsonObjectRequest)
+    }
+
     private fun getArtistInfo() {
-        val artistIds = "2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6,33qOK5uJ8AR2xuQQAhHump"
+        val artistIds =
+            "2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6,33qOK5uJ8AR2xuQQAhHump"
         val url = "https://api.spotify.com/v1/artists?ids=$artistIds"
 
         val jsonObjectRequest = object : JsonObjectRequest(
@@ -165,7 +231,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
 
     private fun playMusic() {
         spotifyAppRemote?.let { appRemote ->
-            val playlistURI = "spotify:playlist:37i9dQZF1DX2sUQwD7tbmL"
+            val playlistURI = "spotify:artist:45eNHdiiabvmbp4erw26rg"
             appRemote.playerApi.play(playlistURI)
 
             appRemote.playerApi.subscribeToPlayerState().setEventCallback { playerState ->

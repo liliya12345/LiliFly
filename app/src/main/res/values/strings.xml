@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">LiliFly</string>
+    <string name="artist_image">Artist Image</string>
+    <string name="followers_icon">Followers icon</string>
+    <string name="popularity_icon">Popularity icon</string>
+    <string name="next_icon">Next icon</string>
+    <string name="statistics">Statistics</string>
+    <string name="followers">Followers</string>
+    <string name="popularity">Popularity</string>
+    <string name="popularity_rating">Popularity Rating</string>
+    <string name="play_on_spotify">Play on Spotify</string>
+    <string name="share">Share</string>
+    <string name="favorite">Favorite</string>
 </resources>

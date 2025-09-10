@@ -16,14 +16,28 @@
         tools:layout_editor_absoluteY="112dp"
         tools:listitem="@layout/artist_item" />
 
-    <TextView
-        android:id="@+id/textView"
+    <EditText
+        android:id="@+id/edText"
+        android:layout_width="182dp"
+        android:layout_height="38dp"
+        android:layout_marginTop="46dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toTopOf="@+id/rvArtist"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="29dp" />
+
+    <Button
+        android:id="@+id/btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hej"
-        tools:layout_editor_absoluteX="175dp"
-        tools:layout_editor_absoluteY="55dp"
-        tools:ignore="MissingConstraints" />
+        android:layout_marginTop="41dp"
+        android:layout_marginEnd="96dp"
+        android:layout_marginBottom="23dp"
+        android:text="Button"
+        app:layout_constraintBottom_toTopOf="@+id/rvArtist"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
