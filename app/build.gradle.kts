@@ -44,14 +44,16 @@ android {
 
     buildFeatures {
         buildConfig = true
+        viewBinding= true
     }
+
 }
 
 dependencies {
     // Spotify Auth
     implementation("com.spotify.android:auth:2.1.1")
 
-
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
     // OR specifically for the AAR file:
     implementation(files("libs/spotify-app-remote-release-0.8.0.aar"))
@@ -61,12 +63,13 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-
+//    implementation("androidx.recyclerview:recyclerview:1.4.0")
     // Volley
     implementation(libs.volley)
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")
+    implementation(libs.androidx.cardview)
 
     // Тестирование
     testImplementation(libs.junit)
