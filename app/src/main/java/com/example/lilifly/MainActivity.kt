@@ -4,6 +4,7 @@ import ArtistAdapter
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
@@ -20,7 +21,7 @@ import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),ArtistAdapter.Listener {
     private lateinit var binding: ActivityMainBinding
     private val clientId = "87f8307bb500473c95c72766f33dadd6"
     private val redirectUri = "com.example.lilifly://callback"
@@ -145,7 +146,7 @@ class MainActivity : AppCompatActivity() {
 
                     // Устанавливаем адаптер в главном потоке
                     runOnUiThread {
-                        binding.rvArtist.adapter = ArtistAdapter(listArtist)
+                        binding.rvArtist.adapter = ArtistAdapter(listArtist,this)
                         Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
                     }
 
@@ -191,5 +192,9 @@ class MainActivity : AppCompatActivity() {
             SpotifyAppRemote.disconnect(it)
             Log.d("MainActivity", "Disconnected from Spotify")
         }
+    }
+
+    override fun onClick(artist: Artist) {
+        Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()
     }
 }

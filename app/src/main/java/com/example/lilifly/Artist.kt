@@ -1,10 +1,14 @@
 package com.example.lilifly
 
-data class Artist (
-    val name: String,
-    val followers: Int,
-    val popularity: Int,
-    val imageUrl: String
-)
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class Artist(
+    val name: String,
+    val followers: Int = 0,
+    val popularity: Int = 0,
+    val imageUrl: String = ""
+) : Parcelable
 
