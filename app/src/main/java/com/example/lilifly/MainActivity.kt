@@ -4,6 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -18,12 +23,13 @@ class MainActivity : AppCompatActivity() {
     private val redirectUri = "com.example.lilifly://callback"
     private val requestCode = 1337
     private var spotifyAppRemote: SpotifyAppRemote? = null
+   private var beaver= "BQCnaJS18A3ToMuxX0g8UvrGxyhHjxysF_71krQGYUQpaezZPYwnnxtAqptjQrHiEbSjvx3bQMDY4UBIUJwQD3lR7vOykqsRl5d1Jf0Ed77mTrDG2xSLwP7pAKYXAoU6Chd_6RwJ1BY"
+    private lateinit var requestQueue: RequestQueue
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        Log.d("MainActivity", "App started")
+        requestQueue = Volley.newRequestQueue(this)
         startAuth()
     }
 
@@ -52,9 +58,10 @@ class MainActivity : AppCompatActivity() {
 
             when (response.type) {
                 AuthorizationResponse.Type.TOKEN -> {
-                    val token = response.accessToken
-                    Log.d("MainActivity", "Success! Token: ${token?.take(10)}...")
+                    beaver = response.accessToken
+                    Log.d("MainActivity", "Success! Token: ${beaver?.take(10)}...")
                     connectToSpotifyAppRemote()
+                    getArtistInfo()
                 }
                 AuthorizationResponse.Type.ERROR -> {
                     Log.e("MainActivity", "Error: ${response.error}")
@@ -77,12 +84,49 @@ class MainActivity : AppCompatActivity() {
                 spotifyAppRemote = appRemote
                 Log.d("MainActivity", "Connected to Spotify App Remote!")
                 playMusic()
+
             }
 
             override fun onFailure(throwable: Throwable) {
                 Log.e("MainActivity", "Connection failed: ${throwable.message}")
             }
         })
+    }
+    private fun getArtistInfo() {
+
+            val url = "https://api.spotify.com/v1/artists/4Z8W4fKeB5YxbusRsdQVPb"
+
+            val jsonObjectRequest = object : JsonObjectRequest(
+                Request.Method.GET, url, null,
+                { response ->
+                    Log.d("SpotifyAPI", "Response: ${response.toString()}")
+                    // Обрабатываем данные артиста
+                    val artistName = response.getString("name")
+                    val followers = response.getJSONObject("followers").getInt("total")
+                    val popularity = response.getInt("popularity")
+
+                    Log.d("SpotifyAPI", "Artist: $artistName")
+                    Log.d("SpotifyAPI", "Followers: $followers")
+                    Log.d("SpotifyAPI", "Popularity: $popularity")
+                },
+                { error ->
+                    Log.e("SpotifyAPI", "Error: ${error.message}")
+                    if (error.networkResponse != null) {
+                        Log.e("SpotifyAPI", "Status code: ${error.networkResponse.statusCode}")
+                    }
+                }
+            ) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer $beaver"
+                    headers["Content-Type"] = "application/json"
+                    return headers
+                }
+            }
+        requestQueue.add(jsonObjectRequest)
+
+
+
     }
 
     private fun playMusic() {
@@ -106,4 +150,9 @@ class MainActivity : AppCompatActivity() {
             Log.d("MainActivity", "Disconnected from Spotify")
         }
     }
+  fun sendRequest() {
+
+
+
+}
 }
