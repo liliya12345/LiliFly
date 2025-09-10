@@ -1,5 +1,6 @@
 package com.example.lilifly
 
+
 import ArtistAdapter
 import android.content.Intent
 import android.os.Bundle
@@ -21,7 +22,7 @@ import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity(),ArtistAdapter.Listener {
+class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
     private lateinit var binding: ActivityMainBinding
     private val clientId = "87f8307bb500473c95c72766f33dadd6"
     private val redirectUri = "com.example.lilifly://callback"
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity(),ArtistAdapter.Listener {
             AuthorizationResponse.Type.TOKEN,
             redirectUri
         )
-            .setScopes(arrayOf("streaming", "user-read-private")) // Добавил scope для чтения данных
+            .setScopes(arrayOf("streaming", "user-read-private"))
             .setShowDialog(true)
             .build()
 
@@ -112,41 +113,29 @@ class MainActivity : AppCompatActivity(),ArtistAdapter.Listener {
             { response ->
                 Log.d("SpotifyAPI", "Response: ${response.toString()}")
 
-                val listArtist = mutableListOf<Artist>()
-                val artistsArray = response.getJSONArray("artists")
-                try{
+                try {
+                    val listArtist = mutableListOf<Artist>()
+                    val artistsArray = response.getJSONArray("artists")
+
                     for (i in 0 until artistsArray.length()) {
                         val artist = artistsArray.getJSONObject(i)
                         val artistName = artist.getString("name")
                         val followers = artist.getJSONObject("followers").getInt("total")
                         val popularity = artist.getInt("popularity")
 
-                        // Получаем изображение (если есть)
+                        // Получаем изображение
                         var imageUrl = ""
                         val imagesArray = artist.getJSONArray("images")
                         if (imagesArray.length() > 0) {
                             val firstImage = imagesArray.getJSONObject(0)
                             imageUrl = firstImage.getString("url")
                         }
-                        listArtist.add(Artist(artistName,followers,popularity,imageUrl))
+                        listArtist.add(Artist(artistName, followers, popularity, imageUrl))
                     }
-                } catch (e: Exception) {
-                    Log.e("SpotifyAPI", "Error parsing JSON: ${e.message}")
-                    e.printStackTrace()
-                }
-
-
-
-
-                try {
-
-
-                    // Создаем список артистов (для примера)
-
 
                     // Устанавливаем адаптер в главном потоке
                     runOnUiThread {
-                        binding.rvArtist.adapter = ArtistAdapter(listArtist,this)
+                        binding.rvArtist.adapter = ArtistAdapter(listArtist, this@MainActivity)
                         Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
                     }
 
@@ -196,5 +185,8 @@ class MainActivity : AppCompatActivity(),ArtistAdapter.Listener {
 
     override fun onClick(artist: Artist) {
         Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()
+        val intent = Intent(this, MainActivity2::class.java)
+        intent.putExtra("artist", artist)
+        startActivity(intent)
     }
 }
