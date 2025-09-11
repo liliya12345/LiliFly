@@ -253,6 +253,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
         Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, MainActivity2::class.java)
         intent.putExtra("artist", artist)
+        intent.putExtra("beaver",beaver)
         startActivity(intent)
     }
 }

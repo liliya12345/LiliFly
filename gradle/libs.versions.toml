@@ -12,6 +12,8 @@ constraintlayout = "2.2.1"
 androidthings = "1.0"
 volley = "1.2.1"
 cardview = "1.0.0"
+recyclerview = "1.4.0"
+fragment = "1.8.9"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -25,6 +27,8 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidthings = { group = "com.google.android.things", name = "androidthings", version.ref = "androidthings" }
 volley = { group = "com.android.volley", name = "volley", version.ref = "volley" }
 androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
+androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

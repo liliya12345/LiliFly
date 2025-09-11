@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/fragment_container"
+    android:layout_height="match_parent"
+    tools:context=".AlbumFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="535dp">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAlbum"
+            android:layout_width="417dp"
+            android:layout_height="509dp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="-6dp"
+            tools:layout_editor_absoluteY="175dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

@@ -13,7 +13,7 @@
     app:strokeWidth="1dp">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardArtist"
+        android:id="@+id/cardAlbum"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
@@ -23,54 +23,65 @@
         android:padding="8dp">
 
         <ImageView
-            android:id="@+id/im"
+            android:id="@+id/album_img"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:contentDescription="Artist image"
+            android:layout_marginStart="36dp"
+            android:contentDescription="Album image"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvTitle"
+            android:id="@+id/album_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="117dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="62dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Artist Name"
+            android:text="Album Name"
             android:textColor="@color/white"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/tvSubtitle"
-            app:layout_constraintEnd_toStartOf="@+id/imageView4"
-            app:layout_constraintStart_toEndOf="@+id/im"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+        <TextView
+            android:id="@+id/totalTracks"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="117dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="62dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Album Name"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
-            android:id="@+id/tvSubtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:id="@+id/releaseDate"
+            android:layout_width="212dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="75dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="26dp"
+            android:layout_marginBottom="18dp"
             android:text="1,234,567 followers • Popularity: 89"
             android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@+id/imageView4"
-            app:layout_constraintStart_toEndOf="@+id/im"
-            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
-
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="16dp"
-            android:contentDescription="Verified artist"
-            app:layout_constraintBottom_toBottomOf="@+id/tvTitle"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvTitle"
-            app:tint="@color/spotify_green" />
+            app:layout_constraintVertical_bias="0.75" />
+
 
         <!-- Progress bar for popularity -->
 

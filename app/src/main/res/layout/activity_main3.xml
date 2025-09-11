@@ -1,36 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center"
+    android:background="@drawable/bg_gradient"
     tools:context=".MainActivity2">
 
-    <TextView
-        android:id="@+id/artistName"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:text="Artist Name" />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <TextView
-        android:id="@+id/artistFollowers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="18sp"
-        android:text="Followers: 0" />
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:title="Artist Details"
+            app:titleTextColor="@color/white" />
 
-    <TextView
-        android:id="@+id/artistPopularity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textSize="18sp"
-        android:text="Popularity: 0" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Artist Image -->
+        <ImageView
+            android:id="@+id/artistImage"
+            android:layout_width="141dp"
+            android:layout_height="55dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="Artist image"
+            android:elevation="8dp"
+            android:scaleType="centerCrop" />
+
+        <!-- Artist Name -->
+        <TextView
+            android:id="@+id/artistName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Artist Name"
+            android:textColor="@color/white"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <!-- Stats Container -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:id="@+id/fr"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <!-- Followers -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="12dp">
+
+                    <ImageView
+                        android:id="@+id/art_img"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:tint="@color/purple_500" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.1"
+                            android:text="FOLLOWERS"
+                            android:textAllCaps="true"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/artistFollowers"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Followers: 0"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="8dp" />
+
+                <!-- Popularity -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="12dp">
+
+                    <ImageView
+                        android:id="@+id/img"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        app:tint="@color/teal_200" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:letterSpacing="0.1"
+                            android:text="POPULARITY"
+                            android:textAllCaps="true"
+                            android:textColor="@color/black"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/artistPopularity"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Popularity: 0"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerView"
+            android:name="com.example.lilifly.AlbumFragment"
+            android:layout_width="match_parent"
+            android:layout_height="240dp" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
