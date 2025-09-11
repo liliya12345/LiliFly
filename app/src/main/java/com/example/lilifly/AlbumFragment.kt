@@ -6,17 +6,25 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.lilifly.databinding.Fragment1Binding
+import com.spotify.android.appremote.api.ConnectionParams
+import com.spotify.android.appremote.api.Connector
+import com.spotify.android.appremote.api.SpotifyAppRemote
+import com.spotify.protocol.types.Track
 
-class AlbumFragment : Fragment(),  AlbumAdapter.Listener{
+class AlbumFragment : Fragment(), AlbumAdapter.Listener {
+    private var spotifyAppRemote: SpotifyAppRemote? = null
     private lateinit var binding: Fragment1Binding
     private lateinit var requestQueue: RequestQueue
+    val listAlbum = mutableListOf<Album>()
+    var isPlaying: Boolean = true
+
+//    val  beaver= arguments?.getString("beaver")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,14 +40,18 @@ class AlbumFragment : Fragment(),  AlbumAdapter.Listener{
         requestQueue = Volley.newRequestQueue(requireContext())
         binding.rvAlbum.layoutManager = LinearLayoutManager(requireContext())
 
+
         // Получаем artistId из аргументов или используем дефолтный
         val artistId = arguments?.getString("artistId") ?: "33qOK5uJ8AR2xuQQAhHump"
         getAlbumInfo(artistId)
+
+
     }
 
     private fun getAlbumInfo(artistId: String) {
         // ПРАВИЛЬНЫЙ URL для получения альбомов артиста
-        val url = "https://api.spotify.com/v1/artists/$artistId/albums?include_groups=album,single&limit=20"
+        val url =
+            "https://api.spotify.com/v1/artists/$artistId/albums?include_groups=album,single&limit=20"
 
         val jsonObjectRequest = object : JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -48,10 +60,11 @@ class AlbumFragment : Fragment(),  AlbumAdapter.Listener{
 
                 try {
                     val itemsArray = response.getJSONArray("items")
-                    val listAlbum = mutableListOf<Album>()
+
                     for (i in 0 until itemsArray.length()) {
                         val album = itemsArray.getJSONObject(i)
                         val name = album.getString("name")
+                        val id = album.getString("id")
                         val releaseDate = album.getString("release_date")
                         val totalTracks = album.getInt("total_tracks") // Исправлено на getInt
 
@@ -63,12 +76,20 @@ class AlbumFragment : Fragment(),  AlbumAdapter.Listener{
                             imageUrl = firstImage.getString("url")
                         }
 
-                        listAlbum.add(Album(name, totalTracks.toString(), releaseDate, imageUrl))
+                        listAlbum.add(
+                            Album(
+                                id,
+                                name,
+                                totalTracks.toString(),
+                                releaseDate,
+                                imageUrl
+                            )
+                        )
                     }
 
                     // Устанавливаем адаптер в главном потоке
                     requireActivity().runOnUiThread {
-                        val adapter = AlbumAdapter(listAlbum,this@AlbumFragment)
+                        val adapter = AlbumAdapter(listAlbum, this@AlbumFragment)
                         binding.rvAlbum.adapter = adapter
                     }
 
@@ -87,7 +108,8 @@ class AlbumFragment : Fragment(),  AlbumAdapter.Listener{
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                val beaver = "BQCKWM7Q7JBNVAksCdAcqe3ziKltwW4epOJJSgtJB4hsE6Z_LzIddYRGF_VjLdMrw1RngzzT4MCZd3ElLadOR2C3GLx7iUNYXCdtTcn43ofKnZFS-E7--TnbnpNTdKf41KmlI7jYz28"
+                val beaver =
+                    "BQDRelgR5k4ixkznadtJcnq7X4wN8OYY6fWlSC4VIF5X5RO-HbdAbfvDiPhNwY6yTE31Yz6egYrmpFnl-nOAnxLHoHpAultfITPF6norQ_VbAlvcU4hsqqOgWHffuwUUzIg_BInTAP8"
                 headers["Authorization"] = "Bearer $beaver"
                 headers["Content-Type"] = "application/json"
                 return headers
@@ -99,7 +121,57 @@ class AlbumFragment : Fragment(),  AlbumAdapter.Listener{
 
     override fun onClick(album: Album) {
         Log.i("Music", "hello")
+        playMusic(album)
 
     }
+
+    override fun onStart() {
+        super.onStart()
+        connectToSpotifyAppRemote()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        spotifyAppRemote?.let {
+            SpotifyAppRemote.disconnect(it)
+        }
+    }
+
+    private fun connectToSpotifyAppRemote() {
+        val connectionParams = ConnectionParams.Builder("87f8307bb500473c95c72766f33dadd6")
+            .setRedirectUri("com.example.lilifly://callback")
+            .showAuthView(true)
+            .build()
+
+        SpotifyAppRemote.connect(
+            requireContext(), connectionParams,
+            object : Connector.ConnectionListener {
+                override fun onConnected(appRemote: SpotifyAppRemote) {
+                    spotifyAppRemote = appRemote
+                    Log.d("AlbumFragment", "Connected to Spotify App Remote!")
+                }
+
+                override fun onFailure(throwable: Throwable) {
+                    Log.e("AlbumFragment", "Connection failed: ${throwable.message}")
+                }
+            })
+    }
+
+    private fun playMusic(album: Album) {
+        spotifyAppRemote?.let { appRemote ->
+            val playlistURI = "spotify:album:${album.id}"
+            if (isPlaying) {
+                appRemote.playerApi.play(playlistURI)
+                isPlaying = false
+
+            } else {
+                appRemote.playerApi.pause()
+                isPlaying = true
+            }
+        }
+
+
+    }
+
 
 }

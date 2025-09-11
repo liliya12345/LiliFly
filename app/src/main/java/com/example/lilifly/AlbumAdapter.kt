@@ -12,7 +12,7 @@ class AlbumAdapter(private val list: List<Album>, private val listener: Listener
     class AlbumViewHolder(val binding: AlbumItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(album: Album, listener: Listener) {
             binding.albumName.text = album.name
-            binding.totalTracks.text = "${album.totalTracks} треков"
+            binding.totalTracks.text = "${album.totalTracks} tracks"
             binding.releaseDate.text = album.releaseDate
 
             // Загрузка изображения

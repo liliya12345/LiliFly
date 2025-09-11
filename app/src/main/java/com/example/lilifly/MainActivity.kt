@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
             override fun onConnected(appRemote: SpotifyAppRemote) {
                 spotifyAppRemote = appRemote
                 Log.d("MainActivity", "Connected to Spotify App Remote!")
-                playMusic()
+//                playMusic()
             }
 
             override fun onFailure(throwable: Throwable) {
@@ -229,31 +229,32 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
         requestQueue.add(jsonObjectRequest)
     }
 
-    private fun playMusic() {
-        spotifyAppRemote?.let { appRemote ->
-            val playlistURI = "spotify:artist:45eNHdiiabvmbp4erw26rg"
-            appRemote.playerApi.play(playlistURI)
-
-            appRemote.playerApi.subscribeToPlayerState().setEventCallback { playerState ->
-                val track: Track = playerState.track
-                Log.d("MainActivity", "${track.name} by ${track.artist.name}")
-            }
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        spotifyAppRemote?.let {
-            SpotifyAppRemote.disconnect(it)
-            Log.d("MainActivity", "Disconnected from Spotify")
-        }
-    }
+//    private fun playMusic() {
+//        spotifyAppRemote?.let { appRemote ->
+//            val playlistURI = "spotify:artist:45eNHdiiabvmbp4erw26rg"
+//            appRemote.playerApi.play(playlistURI)
+//
+//            appRemote.playerApi.subscribeToPlayerState().setEventCallback { playerState ->
+//                val track: Track = playerState.track
+//                Log.d("MainActivity", "${track.name} by ${track.artist.name}")
+//            }
+//        }
+//    }
+//
+//    override fun onStop() {
+//        super.onStop()
+//        spotifyAppRemote?.let {
+//            SpotifyAppRemote.disconnect(it)
+//            Log.d("MainActivity", "Disconnected from Spotify")
+//        }
+//    }
 
     override fun onClick(artist: Artist) {
         Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()
         val intent = Intent(this, MainActivity2::class.java)
         intent.putExtra("artist", artist)
         intent.putExtra("beaver",beaver)
+
         startActivity(intent)
     }
 }

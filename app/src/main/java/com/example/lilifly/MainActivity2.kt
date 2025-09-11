@@ -1,5 +1,6 @@
 package com.example.lilifly
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
@@ -27,8 +28,8 @@ class MainActivity2 : AppCompatActivity() {
             Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_LONG).show()
 
             binding.artistName.text = artist.name
-            binding.artistFollowers.text = artist.followers.toString()
-            binding.artistPopularity.text = artist.popularity.toString()
+            binding.followersCount.text = artist.followers.toString()
+            binding.popularityScore.text = artist.popularity.toString()
             if (artist.imageUrl.isNotEmpty()) {
                 Glide.with(this)
                     .load(artist.imageUrl)
@@ -51,6 +52,14 @@ class MainActivity2 : AppCompatActivity() {
                 .addToBackStack("album_fragment")
                 .commit()
 
+        binding.homeBtn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+        }
+        binding.albBtn.setOnClickListener {
+            val intent = Intent(this, MainActivity2::class.java)
+            startActivity(intent)
+        }
 
 
     }
