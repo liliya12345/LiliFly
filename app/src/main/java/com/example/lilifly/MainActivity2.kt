@@ -60,6 +60,13 @@ class MainActivity2 : AppCompatActivity() {
             val intent = Intent(this, MainActivity2::class.java)
             startActivity(intent)
         }
+        binding.topBtn.setOnClickListener {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, TopFragment())
+                .addToBackStack("top_fragment")
+                .commit()
+
+        }
 
 
     }
