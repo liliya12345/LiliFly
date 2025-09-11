@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -13,7 +14,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.lilifly.databinding.Fragment1Binding
 
-class AlbumFragment : Fragment(), AlbumAdapter.Listener {
+class AlbumFragment : Fragment(),  AlbumAdapter.Listener{
     private lateinit var binding: Fragment1Binding
     private lateinit var requestQueue: RequestQueue
 
@@ -67,7 +68,7 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
 
                     // Устанавливаем адаптер в главном потоке
                     requireActivity().runOnUiThread {
-                        val adapter = AlbumAdapter(listAlbum)
+                        val adapter = AlbumAdapter(listAlbum,this@AlbumFragment)
                         binding.rvAlbum.adapter = adapter
                     }
 
@@ -86,7 +87,7 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                val beaver = "BQBl8ulfunFQRyEeecBWCEpdmgfJxq29hU4ETSNWbxNPr9TDxGdaLxpZzJEQQKO50M2zE6SQ6kPR1FhEEfNCS23Q-BrfPtRJ6Z2KS6HTJEx0IQobltxuHv6Oj5DgrqbvtU2RcMmnF4Y"
+                val beaver = "BQCKWM7Q7JBNVAksCdAcqe3ziKltwW4epOJJSgtJB4hsE6Z_LzIddYRGF_VjLdMrw1RngzzT4MCZd3ElLadOR2C3GLx7iUNYXCdtTcn43ofKnZFS-E7--TnbnpNTdKf41KmlI7jYz28"
                 headers["Authorization"] = "Bearer $beaver"
                 headers["Content-Type"] = "application/json"
                 return headers
@@ -97,9 +98,8 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
     }
 
     override fun onClick(album: Album) {
-        // Обработка клика по альбому
-        Log.d("AlbumFragment", "Clicked on album: ${album.name}")
-        // Здесь можно добавить навигацию к деталям альбома или другое действие
+        Log.i("Music", "hello")
+
     }
 
 }
