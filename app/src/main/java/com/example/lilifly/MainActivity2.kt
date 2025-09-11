@@ -28,8 +28,8 @@ class MainActivity2 : AppCompatActivity() {
             Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_LONG).show()
 
             binding.artistName.text = artist.name
-            binding.followersCount.text = artist.followers.toString()
-            binding.popularityScore.text = artist.popularity.toString()
+            binding.followersCount?.text = artist.followers.toString()
+            binding.popularityScore?.text = artist.popularity.toString()
             if (artist.imageUrl.isNotEmpty()) {
                 Glide.with(this)
                     .load(artist.imageUrl)

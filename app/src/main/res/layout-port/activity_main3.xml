@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
@@ -22,89 +22,51 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Artist Image -->
+        <ImageView
+            android:id="@+id/artistImage"
+            android:layout_width="177dp"
+            android:layout_height="134dp"
+            android:layout_marginTop="24dp"
+            android:contentDescription="Artist image"
+            android:elevation="8dp"
+            android:scaleType="centerCrop" />
 
         <!-- Artist Name -->
-
-        <!-- Stats Container -->
-
-        <!-- Fragment Container -->
-
         <TextView
             android:id="@+id/artistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="64dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="32dp"
             android:ellipsize="end"
             android:maxLines="1"
             android:text="Artist Name"
             android:textColor="@color/white"
             android:textSize="28sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/artistImage"
-            app:layout_constraintEnd_toStartOf="@+id/fragmentContainerView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            android:textStyle="bold" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/fragmentContainerView"
-            android:name="com.example.lilifly.AlbumFragment"
-            android:layout_width="434dp"
-            android:layout_height="298dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="34dp"
-            android:layout_weight="1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/materialCardView"
-            tools:layout_editor_absoluteY="74dp" />
-
-        <ImageView
-            android:id="@+id/artistImage"
-            android:layout_width="177dp"
-            android:layout_height="134dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="62dp"
-            android:layout_marginEnd="51dp"
-            android:layout_marginBottom="21dp"
-            android:contentDescription="Artist image"
-            android:elevation="8dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/materialCardView"
-            app:layout_constraintEnd_toStartOf="@+id/fragmentContainerView"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-        <!-- Bottom Navigation -->
-
+        <!-- Stats Container -->
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardView"
-            android:layout_width="217dp"
-            android:layout_height="81dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             app:cardBackgroundColor="@color/card_background"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="282dp">
+            app:cardElevation="4dp">
 
             <LinearLayout
-                android:layout_width="214dp"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:padding="16dp"
+                android:orientation="horizontal"
                 android:weightSum="2">
 
                 <!-- Followers -->
-
-                <!-- Popularity -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <TextView
                         android:id="@+id/artistFollowers"
@@ -121,16 +83,17 @@
                         android:text="0"
                         android:textColor="@color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
 
+                <!-- Popularity -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
                     <TextView
                         android:id="@+id/artistPopularity"
@@ -147,22 +110,29 @@
                         android:text="0"
                         android:textColor="@color/black"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Fragment Container -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragmentContainerView"
+            android:name="com.example.lilifly.AlbumFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Bottom Navigation -->
         <LinearLayout
-            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="41dp"
             android:background="#070707"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            tools:layout_editor_absoluteX="24dp"
-            tools:layout_editor_absoluteY="24dp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/home_btn"
@@ -189,7 +159,6 @@
                 android:text="Albums"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white" />
-
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
@@ -208,6 +177,6 @@
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

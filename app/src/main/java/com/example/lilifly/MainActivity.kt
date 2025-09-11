@@ -3,6 +3,7 @@ package com.example.lilifly
 
 import ArtistAdapter
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -39,6 +40,10 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
 
         requestQueue = Volley.newRequestQueue(this)
         binding.rvArtist.layoutManager = LinearLayoutManager(this)
+        val orientation = resources.configuration.orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // In landscape
+        }
 
         startAuth()
 

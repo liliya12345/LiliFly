@@ -10,22 +10,16 @@
     tools:context=".MainActivity">
 
     <!-- Заголовок приложения -->
-
-    <!-- Поисковая панель -->
-
-    <!-- Заголовок списка артистов -->
-
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="24dp"
         android:text="Lilifly"
         android:textColor="@color/teal_200"
         android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.114"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,30 +27,29 @@
         android:id="@+id/tvSubtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="4dp"
         android:text="Discover your favorite artists"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.052"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
+    <!-- Поисковая панель -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/searchCard"
-        android:layout_width="256dp"
-        android:layout_height="51dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         app:cardBackgroundColor="#CDD4D9"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.06"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSubtitle">
 
         <LinearLayout
-            android:layout_width="250dp"
-            android:layout_height="47dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:orientation="horizontal"
             android:padding="8dp">
@@ -88,36 +81,34 @@
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Список артистов -->
-
+    <!-- Заголовок списка артистов -->
     <TextView
         android:id="@+id/tvArtistsTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="448dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginEnd="131dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="8dp"
         android:text="Popular Artists"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/searchCard" />
 
+    <!-- Список артистов -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvArtist"
-        android:layout_width="394dp"
-        android:layout_height="279dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvArtistsTitle"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/artist_item" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
