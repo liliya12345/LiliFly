@@ -21,7 +21,7 @@ class MainActivity2 : AppCompatActivity() {
         val artist = intent.getParcelableExtra<Artist>("artist")
         val beaver = intent.getStringExtra("beaver")
 
-
+//
         if (artist != null) {
             Log.i("artist", "onCreate: ${artist.name}")
             Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_LONG).show()
