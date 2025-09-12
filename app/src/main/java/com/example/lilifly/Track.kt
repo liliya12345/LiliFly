@@ -5,11 +5,10 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class Artist(
-    val id:String,
+data class Track(
+    val id: String,
     val name: String,
-    val followers: Int = 0,
-    val popularity: Int = 0,
+    val releaseDate: String = "",
     val imageUrl: String = ""
 ) : Parcelable
 

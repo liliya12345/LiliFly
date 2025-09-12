@@ -3,17 +3,16 @@ package com.example.lilifly
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.lilifly.databinding.ActivityMain3Binding
-import com.example.lilifly.databinding.ActivityMainBinding
-import kotlin.text.replace
 
 class MainActivity2 : AppCompatActivity() {
     private lateinit var binding: ActivityMain3Binding
+
+    private lateinit var viewModel: DataModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMain3Binding.inflate(layoutInflater)
@@ -21,6 +20,9 @@ class MainActivity2 : AppCompatActivity() {
 
         val artist = intent.getParcelableExtra<Artist>("artist")
         val beaver = intent.getStringExtra("beaver")
+        viewModel = ViewModelProvider(this)[DataModel::class.java]
+        viewModel.setData(beaver.toString())
+        viewModel.setArtist(artist)
 
 //
         if (artist != null) {
@@ -44,7 +46,7 @@ class MainActivity2 : AppCompatActivity() {
 
             var frag = AlbumFragment()
             val mBundle = Bundle()
-            mBundle.putParcelable("artist", artist)
+//            mBundle.putParcelable("artist", artist)
             mBundle.putString("beaver", beaver)
             frag.arguments = mBundle
             supportFragmentManager.beginTransaction()
@@ -57,13 +59,31 @@ class MainActivity2 : AppCompatActivity() {
             startActivity(intent)
         }
         binding.albBtn.setOnClickListener {
-            val intent = Intent(this, MainActivity2::class.java)
-            startActivity(intent)
-        }
-        binding.topBtn.setOnClickListener {
+//            val intent = Intent(this, MainActivity2::class.java)
+//            startActivity(intent)
+            val fragment = AlbumFragment().apply {
+                arguments = Bundle().apply {
+                    putString("beaver", beaver)
+                    // Don't need to pass artist as it's in ViewModel
+                }
+            }
+
             supportFragmentManager.beginTransaction()
-                .replace(R.id.fragmentContainerView, TopFragment())
-                .addToBackStack("top_fragment")
+                .replace(R.id.fragmentContainerView, fragment)
+                .commit() // Removed addToBackStack to avoid fragment stacking issues
+        }
+
+
+
+        binding.topBtn.setOnClickListener {
+            val fragment = TopFragment().apply {
+                arguments = Bundle().apply {
+                    putString("beaver",beaver)
+                }
+            }
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView, fragment)
+                .addToBackStack("top_fragment") // Add to back stack only if you want back navigation
                 .commit()
 
         }

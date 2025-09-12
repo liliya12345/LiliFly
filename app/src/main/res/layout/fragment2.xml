@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:id="@+id/fragment_container"
     android:layout_height="match_parent"
-    tools:context=".AlbumFragment">
+    tools:context=".TopFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +14,7 @@
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAlbum"
+            android:id="@+id/rvTop"
             android:layout_width="399dp"
             android:layout_height="459dp"
             android:layout_marginStart="5dp"

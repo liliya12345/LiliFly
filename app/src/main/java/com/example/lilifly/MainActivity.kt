@@ -130,6 +130,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
                     val artistsArray=artists.getJSONArray("items")
                     for (i in 0 until artistsArray.length()) {
                         val artist = artistsArray.getJSONObject(i)
+                        val id = artist.getString("id")
                         val artistName = artist.getString("name")
                         val followers = artist.getJSONObject("followers").getInt("total")
                         val popularity = artist.getInt("popularity")
@@ -141,7 +142,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
                             val firstImage = imagesArray.getJSONObject(0)
                             imageUrl = firstImage.getString("url")
                         }
-                        listArtist.add(Artist(artistName, followers, popularity, imageUrl))
+                        listArtist.add(Artist(id,artistName, followers, popularity, imageUrl))
                     }
 
                     // Устанавливаем адаптер в главном потоке
@@ -191,6 +192,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
                     for (i in 0 until artistsArray.length()) {
                         val artist = artistsArray.getJSONObject(i)
                         val artistName = artist.getString("name")
+                        val id = artist.getString("id")
                         val followers = artist.getJSONObject("followers").getInt("total")
                         val popularity = artist.getInt("popularity")
 
@@ -201,7 +203,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
                             val firstImage = imagesArray.getJSONObject(0)
                             imageUrl = firstImage.getString("url")
                         }
-                        listArtist.add(Artist(artistName, followers, popularity, imageUrl))
+                        listArtist.add(Artist(id,artistName, followers, popularity, imageUrl))
                     }
 
                     // Устанавливаем адаптер в главном потоке

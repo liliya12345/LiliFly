@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="120dp"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
@@ -18,8 +18,8 @@
         android:layout_height="wrap_content" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="363dp"
+        android:layout_height="109dp"
         android:padding="8dp">
 
         <ImageView

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -21,8 +22,11 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
     private var spotifyAppRemote: SpotifyAppRemote? = null
     private lateinit var binding: Fragment1Binding
     private lateinit var requestQueue: RequestQueue
+    private lateinit var beaver: String
     val listAlbum = mutableListOf<Album>()
+    private lateinit var viewModel: DataModel
     var isPlaying: Boolean = true
+
 
 //    val  beaver= arguments?.getString("beaver")
 
@@ -37,13 +41,20 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        var viewModel: DataModel
         requestQueue = Volley.newRequestQueue(requireContext())
         binding.rvAlbum.layoutManager = LinearLayoutManager(requireContext())
 
+        viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
+
+        val id = viewModel.artistData.value?.id.toString()
+        val token = viewModel.data.value
+        beaver=token.toString()
+
 
         // Получаем artistId из аргументов или используем дефолтный
-        val artistId = arguments?.getString("artistId") ?: "33qOK5uJ8AR2xuQQAhHump"
-        getAlbumInfo(artistId)
+
+        getAlbumInfo(id)
 
 
     }
@@ -108,8 +119,7 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                val beaver =
-                    "BQAxZYJvJJAoZSAmVj4qIoqclvWbB8Z5M3boTPEkMa2JQDTqjJ8M9lkVEa7i2ZZURNyG2wKgiRxAtf_DTLOHf4dwxfvkPxfhWcC7jNAoQ4Cor6db16OmpaAl1UcZufv8tusLw0zgfS8"
+
                 headers["Authorization"] = "Bearer $beaver"
                 headers["Content-Type"] = "application/json"
                 return headers
