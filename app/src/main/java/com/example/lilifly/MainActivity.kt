@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -46,11 +47,23 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
         }
 
         startAuth()
+       val  viewModel = ViewModelProvider(this)[DataModel::class.java]
+        viewModel.init(applicationContext) // Передаем контекст для SharedPreferences
 
         binding.btn.setOnClickListener {
             var search = binding.edText.text
             searchByArtist(search.toString())
 
+        }
+        binding.userBtn?.setOnClickListener {
+//            val intent = Intent(this, MainActivity2::class.java)
+//            startActivity(intent)
+            val fragment = UserFragment().apply {
+            }
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fgrm, fragment)
+                .commit() // Removed addToBackStack to avoid fragment stacking issues
         }
 
     }
@@ -235,26 +248,6 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
 
         requestQueue.add(jsonObjectRequest)
     }
-
-//    private fun playMusic() {
-//        spotifyAppRemote?.let { appRemote ->
-//            val playlistURI = "spotify:artist:45eNHdiiabvmbp4erw26rg"
-//            appRemote.playerApi.play(playlistURI)
-//
-//            appRemote.playerApi.subscribeToPlayerState().setEventCallback { playerState ->
-//                val track: Track = playerState.track
-//                Log.d("MainActivity", "${track.name} by ${track.artist.name}")
-//            }
-//        }
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        spotifyAppRemote?.let {
-//            SpotifyAppRemote.disconnect(it)
-//            Log.d("MainActivity", "Disconnected from Spotify")
-//        }
-//    }
 
     override fun onClick(artist: Artist) {
         Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()

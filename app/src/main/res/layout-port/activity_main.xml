@@ -98,8 +98,8 @@
     <!-- Список артистов -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvArtist"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="398dp"
+        android:layout_height="75dp"
         android:layout_marginTop="16dp"
         android:clipToPadding="false"
         android:paddingBottom="16dp"
@@ -110,5 +110,27 @@
         app:layout_constraintTop_toBottomOf="@+id/tvArtistsTitle"
         app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/artist_item" />
+
+    <ImageButton
+        android:id="@+id/user_btn"
+        android:layout_width="36dp"
+        android:layout_height="33dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/ic_dialog_info" />
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fgrm"
+        android:name="com.example.lilifly.UserFragment"
+        android:layout_width="390dp"
+        android:layout_height="351dp"
+        android:layout_marginTop="45dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvArtist" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

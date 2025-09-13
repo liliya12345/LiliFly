@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
 
     <style name="Theme.LiliFly" parent="Base.Theme.LiliFly" />
+
     <style name="Base.Theme.LiliFly" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -18,5 +19,10 @@
 
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ThemeOverlay.LiliFly.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
     </style>
 </resources>

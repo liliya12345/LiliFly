@@ -6,11 +6,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.lilifly.databinding.AlbumItemBinding
 import com.example.lilifly.databinding.TopItemBinding
+import com.example.lilifly.databinding.UserItemBinding
 
-class TopAdapter(private val list: List<Track>, private val listener: Listener) :
-    RecyclerView.Adapter<TopAdapter.TopViewHolder>() {
+class Userdapter(private val list: List<Track>, private val listener: Listener) :
+    RecyclerView.Adapter<Userdapter.UserViewHolder>() {
 
-    class TopViewHolder(val binding: TopItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class UserViewHolder(val binding: UserItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(track: Track, listener: Listener) {
             binding.trackName.text = track.name
             binding.releaseDate.text = track.releaseDate
@@ -22,9 +23,7 @@ class TopAdapter(private val list: List<Track>, private val listener: Listener) 
             binding.playStop.setOnClickListener {
                 listener.onPause(track)
             }
-            binding.addBtn.setOnClickListener {
-                listener.onFavorite(track)
-            }
+
 
             // Загрузка изображения
             Glide.with(binding.trackImg.context)
@@ -38,16 +37,16 @@ class TopAdapter(private val list: List<Track>, private val listener: Listener) 
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TopViewHolder {
-        val binding = TopItemBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+        val binding = UserItemBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return TopViewHolder(binding)
+        return UserViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: TopViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val track= list[position]
         holder.bind(track, listener)
     }

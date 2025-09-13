@@ -15,15 +15,16 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.lilifly.databinding.Fragment2Binding
+import com.example.lilifly.databinding.FragmentUserBinding
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 
 
-class TopFragment : Fragment(), TopAdapter.Listener {
+class UserFragment : Fragment(), Userdapter.Listener {
     private var spotifyAppRemote: SpotifyAppRemote? = null
     private lateinit var user: User
-    private lateinit var binding: Fragment2Binding
+    private lateinit var binding: FragmentUserBinding
     private lateinit var requestQueue: RequestQueue
     private lateinit var beaver: String
     val trackList = mutableListOf<Track>()
@@ -37,7 +38,7 @@ class TopFragment : Fragment(), TopAdapter.Listener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = Fragment2Binding.inflate(inflater, container, false)
+        binding = FragmentUserBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -46,14 +47,15 @@ class TopFragment : Fragment(), TopAdapter.Listener {
 
 //        var viewModel: DataModel
         requestQueue = Volley.newRequestQueue(requireContext())
-        binding.rvTop.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext())
 
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
 
-        val id = viewModel.artistData.value?.id.toString()
-        val token = viewModel.data.value
-        beaver=token.toString()
-
+//        val id = viewModel.artistData.value?.id.toString()
+        val id ="4iV5W9uYEdYUVa79Axb7Rh"
+//        val token = viewModel.data.value
+//        beaver=token.toString()
+        beaver="BQCuW8bIIxo7K_z8UG7lnA3tnEJeIky5f0B_vlW0pVGN76bAimA2JaE54Zwg0HVnCR6FySsEQM1JMUWn4spTtvLpP8dpnexg9F10g2SMmHr15uKOJt59wDeylLX_biRQ11tXJAcxG74"
 
         // Получаем artistId из аргументов или используем дефолтный
 
@@ -64,9 +66,8 @@ class TopFragment : Fragment(), TopAdapter.Listener {
 
     }
 
-    private fun getTrackInfo(artistId: String) {
-        // Add market parameter which is required for top-tracks endpoint
-        val url = "https://api.spotify.com/v1/artists/$artistId/top-tracks?market=US"
+    private fun getTrackInfo(trackId: String) {
+        val url = "https://api.spotify.com/v1/tracks/$trackId"
 
         val jsonObjectRequest = object : JsonObjectRequest(
             Request.Method.GET, url, null,
@@ -74,36 +75,43 @@ class TopFragment : Fragment(), TopAdapter.Listener {
                 Log.i("SpotifyTrack", "Track Response: ${response.toString()}")
 
                 try {
-                    val itemsArray = response.getJSONArray("tracks")
-                    trackList.clear() // Clear previous data
+                    // Parse single track object
+                    val name = response.getString("name")
+                    val id = response.getString("id")
+                    val durationMs = response.getInt("duration_ms")
 
-                    for (i in 0 until itemsArray.length()) {
-                        val track = itemsArray.getJSONObject(i)
-                        val name = track.getString("name")
-                        val id = track.getString("id")
+                    // Get album info for release date and images
+                    val album = response.getJSONObject("album")
+                    val releaseDate = album.getString("release_date")
 
-                        // Get album info for release date and images
-                        val album = track.getJSONObject("album")
-                        val releaseDate = album.getString("release_date")
-
-                        // Get album images
-                        var imageUrl = ""
-                        val imagesArray = album.getJSONArray("images")
-                        if (imagesArray.length() > 0) {
-                            val firstImage = imagesArray.getJSONObject(0)
-                            imageUrl = firstImage.getString("url")
-                        }
-
-                        trackList.add(Track(id, name, releaseDate, imageUrl))
-                        Log.i("TrackList", "Added track: $name")
+                    // Get album images
+                    var imageUrl = ""
+                    val imagesArray = album.getJSONArray("images")
+                    if (imagesArray.length() > 0) {
+                        val firstImage = imagesArray.getJSONObject(0)
+                        imageUrl = firstImage.getString("url")
                     }
 
-                    Log.i("TrackList", "Total tracks: ${trackList.size}")
+                    // Get artists
+                    val artistsArray = response.getJSONArray("artists")
+                    val artistNames = mutableListOf<String>()
+                    for (i in 0 until artistsArray.length()) {
+                        val artist = artistsArray.getJSONObject(i)
+                        artistNames.add(artist.getString("name"))
+                    }
+
+                    val artistName = artistNames.joinToString(", ")
+
+                    // Create track object
+                    val track = Track(id, name, releaseDate, imageUrl)
+                    trackList.add(track)
+
+                    Log.i("TrackList", "Added track: $name")
 
                     // Update UI on main thread
                     requireActivity().runOnUiThread {
-                        val adapter = TopAdapter(trackList, this@TopFragment)
-                        binding.rvTop.adapter = adapter
+                        val adapter = Userdapter(trackList, this@UserFragment)
+                        binding.rvPlaylist.adapter = adapter
                     }
 
                 } catch (e: Exception) {
@@ -189,7 +197,7 @@ class TopFragment : Fragment(), TopAdapter.Listener {
     private fun playMusic(track: Track) {
         spotifyAppRemote?.let { appRemote ->
             val playlistURI = "spotify:track:${track.id}"
-                appRemote.playerApi.play(playlistURI)
+            appRemote.playerApi.play(playlistURI)
 
 
 
