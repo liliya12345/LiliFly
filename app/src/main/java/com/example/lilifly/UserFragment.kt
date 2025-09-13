@@ -1,6 +1,8 @@
 package com.example.lilifly
 
-import User
+import android.content.Context
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -14,25 +16,18 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.example.lilifly.databinding.Fragment2Binding
 import com.example.lilifly.databinding.FragmentUserBinding
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
 
-
 class UserFragment : Fragment(), Userdapter.Listener {
     private var spotifyAppRemote: SpotifyAppRemote? = null
-    private lateinit var user: User
     private lateinit var binding: FragmentUserBinding
     private lateinit var requestQueue: RequestQueue
-    private lateinit var beaver: String
-    val trackList = mutableListOf<Track>()
     private lateinit var viewModel: DataModel
-    var isPlaying: Boolean = true
-
-
-//    val  beaver= arguments?.getString("beaver")
+    private val trackList = mutableListOf<Track>()
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,31 +37,38 @@ class UserFragment : Fragment(), Userdapter.Listener {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+//        viewModel.initSharedPreferences(requireContext())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Сохранение данных можно делать здесь, если нужно
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sharedPreferences = requireContext().getSharedPreferences("UserPreferences", MODE_PRIVATE)
+        var s = sharedPreferences.getString("melodyName", "")
 
-//        var viewModel: DataModel
+
         requestQueue = Volley.newRequestQueue(requireContext())
         binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
-
-//        val id = viewModel.artistData.value?.id.toString()
-        val id ="4iV5W9uYEdYUVa79Axb7Rh"
-//        val token = viewModel.data.value
-//        beaver=token.toString()
-        beaver="BQD-0qL3mt4OMh2Bz0LU6kjHZVDPPV87oHOxKt1k1IaADSbh74XZyhOx1O8qAukAeqqyYd4C9mEjWoZyt8gLH8iRE4DS76_aO4ccaLONMuALTQC79CMKmo5yzleSzqacloynnRi2sjw"
-
-        // Получаем artistId из аргументов или используем дефолтный
-
-        getTrackInfo(id)
+        // Получаем токен из ViewModel
+        val token = "BQBhR1s8ZdfSeB1mlS7PHCO41HXzMrhqHpH7xteKKiejRTyy5XLwPxBoyT0y64mmxTvjNlF-_jhWNZxpZv9gDoFOY1C2dqYNCLBIN0M9mfsKD50W9PGgqXkaMfIA4W2p_f5MxCuiahU"
 
 
+        // Используем правильный ID трека (не artist ID)
+        val trackId = "11dFghVXANMlKmJXsNCbNl" // Это ID трека
+        // Инициализируем ViewModel
+//        viewModel.initSharedPreferences(requireContext())
 
-
+        getTrackInfo(trackId, token)
     }
 
-    private fun getTrackInfo(trackId: String) {
+    private fun getTrackInfo(trackId: String, token: String) {
         val url = "https://api.spotify.com/v1/tracks/$trackId"
 
         val jsonObjectRequest = object : JsonObjectRequest(
@@ -78,7 +80,6 @@ class UserFragment : Fragment(), Userdapter.Listener {
                     // Parse single track object
                     val name = response.getString("name")
                     val id = response.getString("id")
-                    val durationMs = response.getInt("duration_ms")
 
                     // Get album info for release date and images
                     val album = response.getJSONObject("album")
@@ -106,13 +107,14 @@ class UserFragment : Fragment(), Userdapter.Listener {
                     val track = Track(id, name, releaseDate, imageUrl)
                     trackList.add(track)
 
+                    // Сохраняем в ViewModel
+
+
                     Log.i("TrackList", "Added track: $name")
 
-                    // Update UI on main thread
-                    requireActivity().runOnUiThread {
-                        val adapter = Userdapter(trackList, this@UserFragment)
-                        binding.rvPlaylist.adapter = adapter
-                    }
+                    // Update UI
+                    val adapter = Userdapter(trackList, this@UserFragment)
+                    binding.rvPlaylist.adapter = adapter
 
                 } catch (e: Exception) {
                     Log.e("SpotifyTracks", "Error parsing track JSON: ${e.message}")
@@ -129,7 +131,7 @@ class UserFragment : Fragment(), Userdapter.Listener {
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer $beaver"
+                headers["Authorization"] = "Bearer $token"
                 headers["Content-Type"] = "application/json"
                 return headers
             }
@@ -139,29 +141,19 @@ class UserFragment : Fragment(), Userdapter.Listener {
     }
 
     override fun onClick(track: Track) {
-        Log.i("Music", "hello")
+        Log.i("Music", "Playing track: ${track.name}")
         playMusic(track)
-
     }
+
     override fun onPause(track: Track) {
-        Log.i("Music", "hello")
-        spotifyAppRemote?.let { appRemote ->
-            val playlistURI = "spotify:track:${track.id}"
-            appRemote.playerApi.pause()
-
-        }
-
-
+        Log.i("Music", "Pausing track: ${track.name}")
+        spotifyAppRemote?.playerApi?.pause()
     }
 
     override fun onFavorite(track: Track) {
-
         viewModel.addToFavorites(track)
-        var value = viewModel.favoriteTrackIds.value
         Toast.makeText(requireContext(), "Added to favorite: ${track.name}", Toast.LENGTH_SHORT).show()
-
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -186,28 +178,19 @@ class UserFragment : Fragment(), Userdapter.Listener {
             object : Connector.ConnectionListener {
                 override fun onConnected(appRemote: SpotifyAppRemote) {
                     spotifyAppRemote = appRemote
-                    Log.d("TopFragment", "Connected to Spotify App Remote!")
+                    Log.d("UserFragment", "Connected to Spotify App Remote!")
                 }
 
                 override fun onFailure(throwable: Throwable) {
-                    Log.e("TopFragment", "Connection failed: ${throwable.message}")
+                    Log.e("UserFragment", "Connection failed: ${throwable.message}")
                 }
             })
     }
 
     private fun playMusic(track: Track) {
         spotifyAppRemote?.let { appRemote ->
-            val playlistURI = "spotify:track:${track.id}"
-            appRemote.playerApi.play(playlistURI)
-
-
-
+            val trackURI = "spotify:track:${track.id}"
+            appRemote.playerApi.play(trackURI)
         }
-
-
     }
-
-
-
-
 }

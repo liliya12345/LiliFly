@@ -18,18 +18,27 @@ class DataModel : ViewModel() {
     val userData = MutableLiveData<User>()
     val trackData = MutableLiveData<Track>()
 
+
     // Список ID избранных треков
     val favoriteTrackIds = MutableLiveData<MutableSet<Track>>(mutableSetOf())
 
 
     // Добавить трек в фавориты
     fun addToFavorites(track: Track) {
+
         val currentFavorites = favoriteTrackIds.value ?: mutableSetOf()
         currentFavorites.add(track)
+
         favoriteTrackIds.value = currentFavorites
         Log.d("DataModel", "Track added to favorites: $track")
 
     }
+
+    private fun loadFavoritesFromStorage() {
+        var pref = sharedPreferences.getString("melodyName", null)
+    }
+
+
 
 
     fun setData(value: String) {

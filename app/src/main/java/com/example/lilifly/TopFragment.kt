@@ -1,6 +1,8 @@
 package com.example.lilifly
 
 import User
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -24,6 +26,7 @@ class TopFragment : Fragment(), TopAdapter.Listener {
     private var spotifyAppRemote: SpotifyAppRemote? = null
     private lateinit var user: User
     private lateinit var binding: Fragment2Binding
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var requestQueue: RequestQueue
     private lateinit var beaver: String
     val trackList = mutableListOf<Track>()
@@ -147,9 +150,13 @@ class TopFragment : Fragment(), TopAdapter.Listener {
     }
 
     override fun onFavorite(track: Track) {
+        sharedPreferences = requireContext().getSharedPreferences("UserPreferences", MODE_PRIVATE)
 
         viewModel.addToFavorites(track)
         var value = viewModel.favoriteTrackIds.value
+        val editor = sharedPreferences.edit()
+        editor.putString("melodyName", track.name)
+        editor.apply()
 
         Toast.makeText(requireContext(), "Added to favorite: ${track.name}", Toast.LENGTH_SHORT).show()
 
