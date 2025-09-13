@@ -81,7 +81,7 @@ class UserFragment : Fragment(), Userdapter.Listener {
         binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext())
 
         // Получаем токен из ViewModel
-        val token = "BQDbDHruwC4r7ARBeN8q04LPmVJTTVPUD-7R6VW3oNAL8NB-kQPAKCCfd9bTmxFo0docMJd1pDqd7_HhdiMk0ClxmRLs7D2O2lIwuWkmO7Vh0gvmDqG6gn1tQbynXqG0o2dNyoVNA1I"
+        val token = "BQA9rUZL4Of2_rFXjMLYxSNhbWVODyHytEvXDgKjE5qtyj1cFnkyK7K5fd60K5JwW8jxEW3pXQxSo4UXaImVsnBQVdjLw4DVMzhD2N0Fhx7LfQviB5bO3eQAUjVoQlXqVOzZzPw2ZEk"
 
 
         // Используем правильный ID трека (не artist ID)
@@ -89,87 +89,86 @@ class UserFragment : Fragment(), Userdapter.Listener {
         // Инициализируем ViewModel
 //        viewModel.initSharedPreferences(requireContext())
 
-        getTrackInfo( token)
+        getTrackInfo()
     }
 
-    private fun getTrackInfo( token: String) {
+    private fun getTrackInfo( ) {
         var tarckIdtarckId: String =""
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
         var list = viewModel.favoriteTrackIds.value
-        for (i in list!!){
-            tarckIdtarckId = i.id
-        }
+         var token= "BQBl5puIpGtFpvEjrVwetKN1hXwvaTqfh_XDonYsVK-kzkecu6Ny3aHGCPsTTiyeW9yheNgUf4BDjV2eL_T8rlmPtq1NesRJPUbMKgQn2APhMlHYaFGboxqsqcZNGOegVDxBGYWKqF4"
+        for (i in list!!) {
+            val url = "https://api.spotify.com/v1/tracks/${i.id}"
 
-        val url = "https://api.spotify.com/v1/tracks/$tarckIdtarckId"
+            val jsonObjectRequest = object : JsonObjectRequest(
+                Request.Method.GET, url, null,
+                { response ->
+                    Log.i("SpotifyTrack", "Track Response: ${response.toString()}")
 
-        val jsonObjectRequest = object : JsonObjectRequest(
-            Request.Method.GET, url, null,
-            { response ->
-                Log.i("SpotifyTrack", "Track Response: ${response.toString()}")
+                    try {
+                        // Parse single track object
+                        val name = response.getString("name")
+                        val id = response.getString("id")
 
-                try {
-                    // Parse single track object
-                    val name = response.getString("name")
-                    val id = response.getString("id")
+                        // Get album info for release date and images
+                        val album = response.getJSONObject("album")
+                        val releaseDate = album.getString("release_date")
 
-                    // Get album info for release date and images
-                    val album = response.getJSONObject("album")
-                    val releaseDate = album.getString("release_date")
+                        // Get album images
+                        var imageUrl = ""
+                        val imagesArray = album.getJSONArray("images")
+                        if (imagesArray.length() > 0) {
+                            val firstImage = imagesArray.getJSONObject(0)
+                            imageUrl = firstImage.getString("url")
+                        }
 
-                    // Get album images
-                    var imageUrl = ""
-                    val imagesArray = album.getJSONArray("images")
-                    if (imagesArray.length() > 0) {
-                        val firstImage = imagesArray.getJSONObject(0)
-                        imageUrl = firstImage.getString("url")
+                        // Get artists
+                        val artistsArray = response.getJSONArray("artists")
+                        val artistNames = mutableListOf<String>()
+                        for (i in 0 until artistsArray.length()) {
+                            val artist = artistsArray.getJSONObject(i)
+                            artistNames.add(artist.getString("name"))
+                        }
+
+
+                        // Create track object
+                        val track = Track(id, name, releaseDate, imageUrl)
+                        trackList.add(track)
+
+                        // Сохраняем в ViewModel
+
+
+                        Log.i("TrackList", "Added track: $name")
+
+                        // Update UI
+                        val adapter = Userdapter(trackList, this@UserFragment)
+                        binding.rvPlaylist.adapter = adapter
+
+                    } catch (e: Exception) {
+                        Log.e("SpotifyTracks", "Error parsing track JSON: ${e.message}")
+                        e.printStackTrace()
                     }
-
-                    // Get artists
-                    val artistsArray = response.getJSONArray("artists")
-                    val artistNames = mutableListOf<String>()
-                    for (i in 0 until artistsArray.length()) {
-                        val artist = artistsArray.getJSONObject(i)
-                        artistNames.add(artist.getString("name"))
+                },
+                { error ->
+                    Log.e("SpotifyTracks", "Track Error: ${error.message}")
+                    error.networkResponse?.let {
+                        Log.e("SpotifyTracks", "Status code: ${it.statusCode}")
+                        Log.e("SpotifyTracks", "Response data: ${String(it.data)}")
                     }
-
-                    val artistName = artistNames.joinToString(", ")
-
-                    // Create track object
-                    val track = Track(id, name, releaseDate, imageUrl)
-                    trackList.add(track)
-
-                    // Сохраняем в ViewModel
-
-
-                    Log.i("TrackList", "Added track: $name")
-
-                    // Update UI
-                    val adapter = Userdapter(trackList, this@UserFragment)
-                    binding.rvPlaylist.adapter = adapter
-
-                } catch (e: Exception) {
-                    Log.e("SpotifyTracks", "Error parsing track JSON: ${e.message}")
-                    e.printStackTrace()
                 }
-            },
-            { error ->
-                Log.e("SpotifyTracks", "Track Error: ${error.message}")
-                error.networkResponse?.let {
-                    Log.e("SpotifyTracks", "Status code: ${it.statusCode}")
-                    Log.e("SpotifyTracks", "Response data: ${String(it.data)}")
+            ) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer $token"
+                    headers["Content-Type"] = "application/json"
+                    return headers
                 }
             }
-        ) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer $token"
-                headers["Content-Type"] = "application/json"
-                return headers
-            }
-        }
 
         requestQueue.add(jsonObjectRequest)
     }
+    }
+
 
     override fun onClick(track: Track) {
         Log.i("Music", "Playing track: ${track.name}")
