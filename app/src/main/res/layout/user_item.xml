@@ -79,6 +79,21 @@
             app:srcCompat="@android:drawable/ic_media_play" />
 
         <ImageButton
+            android:id="@+id/add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="199dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/track_img"
+            app:layout_constraintTop_toBottomOf="@+id/releaseDate"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@android:drawable/ic_input_add" />
+
+        <ImageButton
             android:id="@+id/play_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -23,7 +23,6 @@ class MainActivity2 : AppCompatActivity() {
         viewModel = ViewModelProvider(this)[DataModel::class.java]
         viewModel.setData(beaver.toString())
         viewModel.setArtist(artist)
-        viewModel.init(applicationContext)
 
 //
         if (artist != null) {

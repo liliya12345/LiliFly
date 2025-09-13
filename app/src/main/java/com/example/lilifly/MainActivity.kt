@@ -48,7 +48,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
 
         startAuth()
        val  viewModel = ViewModelProvider(this)[DataModel::class.java]
-        viewModel.init(applicationContext) // Передаем контекст для SharedPreferences
+
 
         binding.btn.setOnClickListener {
             var search = binding.edText.text

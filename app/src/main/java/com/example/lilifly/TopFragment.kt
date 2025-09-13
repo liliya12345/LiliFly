@@ -148,7 +148,9 @@ class TopFragment : Fragment(), TopAdapter.Listener {
 
     override fun onFavorite(track: Track) {
 
-        viewModel.addToFavorites(track.id)
+        viewModel.addToFavorites(track)
+        var value = viewModel.favoriteTrackIds.value
+
         Toast.makeText(requireContext(), "Added to favorite: ${track.name}", Toast.LENGTH_SHORT).show()
 
     }

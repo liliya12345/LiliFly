@@ -23,6 +23,9 @@ class Userdapter(private val list: List<Track>, private val listener: Listener) 
             binding.playStop.setOnClickListener {
                 listener.onPause(track)
             }
+            binding.addBtn.setOnClickListener {
+                listener.onFavorite(track)
+            }
 
 
             // Загрузка изображения

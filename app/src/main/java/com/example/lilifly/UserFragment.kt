@@ -55,7 +55,7 @@ class UserFragment : Fragment(), Userdapter.Listener {
         val id ="4iV5W9uYEdYUVa79Axb7Rh"
 //        val token = viewModel.data.value
 //        beaver=token.toString()
-        beaver="BQCuW8bIIxo7K_z8UG7lnA3tnEJeIky5f0B_vlW0pVGN76bAimA2JaE54Zwg0HVnCR6FySsEQM1JMUWn4spTtvLpP8dpnexg9F10g2SMmHr15uKOJt59wDeylLX_biRQ11tXJAcxG74"
+        beaver="BQD-0qL3mt4OMh2Bz0LU6kjHZVDPPV87oHOxKt1k1IaADSbh74XZyhOx1O8qAukAeqqyYd4C9mEjWoZyt8gLH8iRE4DS76_aO4ccaLONMuALTQC79CMKmo5yzleSzqacloynnRi2sjw"
 
         // Получаем artistId из аргументов или используем дефолтный
 
@@ -156,7 +156,8 @@ class UserFragment : Fragment(), Userdapter.Listener {
 
     override fun onFavorite(track: Track) {
 
-        viewModel.addToFavorites(track.id)
+        viewModel.addToFavorites(track)
+        var value = viewModel.favoriteTrackIds.value
         Toast.makeText(requireContext(), "Added to favorite: ${track.name}", Toast.LENGTH_SHORT).show()
 
     }
