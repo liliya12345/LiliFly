@@ -27,16 +27,16 @@ class DataModel : ViewModel() {
     fun addToFavorites(track: Track) {
 
         val currentFavorites = favoriteTrackIds.value ?: mutableSetOf()
+
         currentFavorites.add(track)
 
         favoriteTrackIds.value = currentFavorites
+
         Log.d("DataModel", "Track added to favorites: $track")
 
     }
 
-    private fun loadFavoritesFromStorage() {
-        var pref = sharedPreferences.getString("melodyName", null)
-    }
+
 
 
 

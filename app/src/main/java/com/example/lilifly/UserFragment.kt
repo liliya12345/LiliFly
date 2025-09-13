@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.text.LoginFilter
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -27,6 +28,7 @@ class UserFragment : Fragment(), Userdapter.Listener {
     private lateinit var requestQueue: RequestQueue
     private lateinit var viewModel: DataModel
     private val trackList = mutableListOf<Track>()
+    private lateinit var track: Track
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreateView(
@@ -39,25 +41,47 @@ class UserFragment : Fragment(), Userdapter.Listener {
 
     override fun onResume() {
         super.onResume()
-//        viewModel.initSharedPreferences(requireContext())
+
+
     }
 
     override fun onPause() {
         super.onPause()
-        // Сохранение данных можно делать здесь, если нужно
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
         sharedPreferences = requireContext().getSharedPreferences("UserPreferences", MODE_PRIVATE)
-        var s = sharedPreferences.getString("melodyName", "")
+        sharedPreferences = requireContext().getSharedPreferences("UserPreferences", MODE_PRIVATE)
+        val id = sharedPreferences.getString("melodyId", null)
+        val name = sharedPreferences.getString("melodyName", null)
+        val date = sharedPreferences.getString("melodyRelease", null)
+        val img = sharedPreferences.getString("melodyImg", null)
+
+        // Проверяем, что все необходимые значения есть
+        if (id != null && name != null && date != null && img != null) {
+            // Создаем объект Track
+            track = Track(
+                id = id,
+                name = name,
+                releaseDate = date,
+                imageUrl = img
+            )
+            viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
+            // Добавляем в избранное
+            viewModel.addToFavorites(track)
+            var value = viewModel.favoriteTrackIds.value
+            Log.i("ViewModel", ""+value)
+        }
 
 
         requestQueue = Volley.newRequestQueue(requireContext())
         binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext())
 
         // Получаем токен из ViewModel
-        val token = "BQBhR1s8ZdfSeB1mlS7PHCO41HXzMrhqHpH7xteKKiejRTyy5XLwPxBoyT0y64mmxTvjNlF-_jhWNZxpZv9gDoFOY1C2dqYNCLBIN0M9mfsKD50W9PGgqXkaMfIA4W2p_f5MxCuiahU"
+        val token = "BQDbDHruwC4r7ARBeN8q04LPmVJTTVPUD-7R6VW3oNAL8NB-kQPAKCCfd9bTmxFo0docMJd1pDqd7_HhdiMk0ClxmRLs7D2O2lIwuWkmO7Vh0gvmDqG6gn1tQbynXqG0o2dNyoVNA1I"
 
 
         // Используем правильный ID трека (не artist ID)
@@ -65,11 +89,18 @@ class UserFragment : Fragment(), Userdapter.Listener {
         // Инициализируем ViewModel
 //        viewModel.initSharedPreferences(requireContext())
 
-        getTrackInfo(trackId, token)
+        getTrackInfo( token)
     }
 
-    private fun getTrackInfo(trackId: String, token: String) {
-        val url = "https://api.spotify.com/v1/tracks/$trackId"
+    private fun getTrackInfo( token: String) {
+        var tarckIdtarckId: String =""
+        viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
+        var list = viewModel.favoriteTrackIds.value
+        for (i in list!!){
+            tarckIdtarckId = i.id
+        }
+
+        val url = "https://api.spotify.com/v1/tracks/$tarckIdtarckId"
 
         val jsonObjectRequest = object : JsonObjectRequest(
             Request.Method.GET, url, null,

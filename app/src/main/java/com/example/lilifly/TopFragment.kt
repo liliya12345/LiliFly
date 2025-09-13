@@ -155,7 +155,10 @@ class TopFragment : Fragment(), TopAdapter.Listener {
         viewModel.addToFavorites(track)
         var value = viewModel.favoriteTrackIds.value
         val editor = sharedPreferences.edit()
+        editor.putString("melodyId", track.id)
         editor.putString("melodyName", track.name)
+        editor.putString("melodyRelease", track.releaseDate)
+        editor.putString("melodyImg", track.imageUrl)
         editor.apply()
 
         Toast.makeText(requireContext(), "Added to favorite: ${track.name}", Toast.LENGTH_SHORT).show()

@@ -6,9 +6,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Track(
-    val id: String,
-    val name: String,
-    val releaseDate: String = "",
-    val imageUrl: String = ""
+    var id: String,
+    var name: String,
+    var releaseDate: String = "",
+    var imageUrl: String = ""
 ) : Parcelable
-
