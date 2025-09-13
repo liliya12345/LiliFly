@@ -10,16 +10,18 @@
     tools:context=".MainActivity">
 
     <!-- Заголовок приложения -->
+
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="95dp"
+        android:layout_height="39dp"
         android:layout_marginTop="24dp"
         android:text="Lilifly"
-        android:textColor="@color/teal_200"
-        android:textSize="28sp"
+        android:textColor="@color/material_dynamic_neutral80"
+        android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.549"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,6 +80,8 @@
                 app:backgroundTint="#2A0564"
                 app:cornerRadius="12dp"
                 app:iconGravity="textStart" />
+
+
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -111,15 +115,7 @@
         app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/artist_item" />
 
-    <ImageButton
-        android:id="@+id/user_btn"
-        android:layout_width="36dp"
-        android:layout_height="33dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/ic_dialog_info" />
+
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fgrm"
@@ -132,5 +128,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rvArtist" />
+
+    <ImageButton
+        android:id="@+id/userBtn"
+        android:layout_width="55dp"
+        android:layout_height="57dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ava99" />
+
+    <ImageButton
+        android:id="@+id/imageButton15"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="132dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toStartOf="@+id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
