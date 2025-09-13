@@ -25,7 +25,7 @@ import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
+class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val clientId = "87f8307bb500473c95c72766f33dadd6"
     private val redirectUri = "com.example.lilifly://callback"
@@ -41,33 +41,42 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
         setContentView(binding.root)
 
         requestQueue = Volley.newRequestQueue(this)
-        binding.rvArtist.layoutManager = LinearLayoutManager(this)
+//        binding.rvArtist.layoutManager = LinearLayoutManager(this)
         val orientation = resources.configuration.orientation
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             // In landscape
         }
 
         startAuth()
-       val  viewModel = ViewModelProvider(this)[DataModel::class.java]
+//       val  viewModel = ViewModelProvider(this)[DataModel::class.java]
+//
+//
+//        binding.btn.setOnClickListener {
+//            var search = binding.edText.text
+//            searchByArtist(search.toString())
+//
+//        }
 
-
-        binding.btn.setOnClickListener {
-            var search = binding.edText.text
-            searchByArtist(search.toString())
-
-        }
         binding.userBtn?.setOnClickListener {
 //            val intent = Intent(this, MainActivity2::class.java)
 //            startActivity(intent)
             val fragment = UserFragment().apply {
             }
-
+//
             supportFragmentManager.beginTransaction()
                 .replace(R.id.fgrm, fragment)
                 .commit() // Removed addToBackStack to avoid fragment stacking issues
         }
 
+        val fragment = PopularFragment().apply {
+        }
+//
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fgrm, fragment)
+            .commit() // Removed addToBackStack to avoid fragment stacking issues
     }
+
+
 
 
     private fun startAuth() {
@@ -98,7 +107,7 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
                     beaver = response.accessToken
                     Log.d("MainActivity", "Success! Token: ${beaver.take(10)}...")
                     connectToSpotifyAppRemote()
-                    getArtistInfo()
+//                    getArtistInfo()
                 }
 
                 AuthorizationResponse.Type.ERROR -> {
@@ -131,131 +140,131 @@ class MainActivity : AppCompatActivity(), ArtistAdapter.Listener {
         })
     }
 
-    private fun searchByArtist(qwert: String) {
-        val url = "https://api.spotify.com/v1/search?q=$qwert&type=artist"
-        val jsonObjectRequest = object : JsonObjectRequest(
-            Request.Method.GET, url, null,
-            { response ->
-                Log.i("SpotifyAPI", "Response: ${response.toString()}")
+//    private fun searchByArtist(qwert: String) {
+//        val url = "https://api.spotify.com/v1/search?q=$qwert&type=artist"
+//        val jsonObjectRequest = object : JsonObjectRequest(
+//            Request.Method.GET, url, null,
+//            { response ->
+//                Log.i("SpotifyAPI", "Response: ${response.toString()}")
+//
+//                try {
+//                    val listArtist = mutableListOf<Artist>()
+//                    val artists = response.getJSONObject("artists")
+//                    val artistsArray=artists.getJSONArray("items")
+//                    for (i in 0 until artistsArray.length()) {
+//                        val artist = artistsArray.getJSONObject(i)
+//                        val id = artist.getString("id")
+//                        val artistName = artist.getString("name")
+//                        val followers = artist.getJSONObject("followers").getInt("total")
+//                        val popularity = artist.getInt("popularity")
+//
+//                        // Получаем изображение
+//                        var imageUrl = ""
+//                        val imagesArray = artist.getJSONArray("images")
+//                        if (imagesArray.length() > 0) {
+//                            val firstImage = imagesArray.getJSONObject(0)
+//                            imageUrl = firstImage.getString("url")
+//                        }
+//                        listArtist.add(Artist(id,artistName, followers, popularity, imageUrl))
+//                    }
+//
+//                    // Устанавливаем адаптер в главном потоке
+//                    runOnUiThread {
+//                        binding.rvArtist.adapter = ArtistAdapter(listArtist, this@MainActivity)
+//                        Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
+//                    }
+//
+//                } catch (e: Exception) {
+//                    Log.e("SpotifyAPI", "Error parsing JSON: ${e.message}")
+//                    e.printStackTrace()
+//                }
+//            },
+//            { error ->
+//                Log.e("SpotifyAPI", "Error: ${error.message}")
+//                error.networkResponse?.let {
+//                    Log.e("SpotifyAPI", "Status code: ${it.statusCode}")
+//                    Log.e("SpotifyAPI", "Response data: ${String(it.data)}")
+//                }
+//            }
+//        ) {
+//            override fun getHeaders(): MutableMap<String, String> {
+//                val headers = HashMap<String, String>()
+//                headers["Authorization"] = "Bearer $beaver"
+//                headers["Content-Type"] = "application/json"
+//                return headers
+//            }
+//        }
+//
+//        requestQueue.add(jsonObjectRequest)
+//    }
+//
+//    private fun getArtistInfo() {
+//        val artistIds =
+//            "2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6,33qOK5uJ8AR2xuQQAhHump"
+//        val url = "https://api.spotify.com/v1/artists?ids=$artistIds"
+//
+//        val jsonObjectRequest = object : JsonObjectRequest(
+//            Request.Method.GET, url, null,
+//            { response ->
+//                Log.d("SpotifyAPI", "Response: ${response.toString()}")
+//
+//                try {
+//                    val listArtist = mutableListOf<Artist>()
+//                    val artistsArray = response.getJSONArray("artists")
+//
+//                    for (i in 0 until artistsArray.length()) {
+//                        val artist = artistsArray.getJSONObject(i)
+//                        val artistName = artist.getString("name")
+//                        val id = artist.getString("id")
+//                        val followers = artist.getJSONObject("followers").getInt("total")
+//                        val popularity = artist.getInt("popularity")
+//
+//                        // Получаем изображение
+//                        var imageUrl = ""
+//                        val imagesArray = artist.getJSONArray("images")
+//                        if (imagesArray.length() > 0) {
+//                            val firstImage = imagesArray.getJSONObject(0)
+//                            imageUrl = firstImage.getString("url")
+//                        }
+//                        listArtist.add(Artist(id,artistName, followers, popularity, imageUrl))
+//                    }
+//
+//                    // Устанавливаем адаптер в главном потоке
+//                    runOnUiThread {
+//                        binding.rvArtist.adapter = ArtistAdapter(listArtist, this@MainActivity)
+//                        Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
+//                    }
+//
+//                } catch (e: Exception) {
+//                    Log.e("SpotifyAPI", "Error parsing JSON: ${e.message}")
+//                    e.printStackTrace()
+//                }
+//            },
+//            { error ->
+//                Log.e("SpotifyAPI", "Error: ${error.message}")
+//                error.networkResponse?.let {
+//                    Log.e("SpotifyAPI", "Status code: ${it.statusCode}")
+//                    Log.e("SpotifyAPI", "Response data: ${String(it.data)}")
+//                }
+//            }
+//        ) {
+//            override fun getHeaders(): MutableMap<String, String> {
+//                val headers = HashMap<String, String>()
+//                headers["Authorization"] = "Bearer $beaver"
+//                headers["Content-Type"] = "application/json"
+//                return headers
+//            }
+//        }
+//
+//        requestQueue.add(jsonObjectRequest)
+//    }
 
-                try {
-                    val listArtist = mutableListOf<Artist>()
-                    val artists = response.getJSONObject("artists")
-                    val artistsArray=artists.getJSONArray("items")
-                    for (i in 0 until artistsArray.length()) {
-                        val artist = artistsArray.getJSONObject(i)
-                        val id = artist.getString("id")
-                        val artistName = artist.getString("name")
-                        val followers = artist.getJSONObject("followers").getInt("total")
-                        val popularity = artist.getInt("popularity")
-
-                        // Получаем изображение
-                        var imageUrl = ""
-                        val imagesArray = artist.getJSONArray("images")
-                        if (imagesArray.length() > 0) {
-                            val firstImage = imagesArray.getJSONObject(0)
-                            imageUrl = firstImage.getString("url")
-                        }
-                        listArtist.add(Artist(id,artistName, followers, popularity, imageUrl))
-                    }
-
-                    // Устанавливаем адаптер в главном потоке
-                    runOnUiThread {
-                        binding.rvArtist.adapter = ArtistAdapter(listArtist, this@MainActivity)
-                        Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
-                    }
-
-                } catch (e: Exception) {
-                    Log.e("SpotifyAPI", "Error parsing JSON: ${e.message}")
-                    e.printStackTrace()
-                }
-            },
-            { error ->
-                Log.e("SpotifyAPI", "Error: ${error.message}")
-                error.networkResponse?.let {
-                    Log.e("SpotifyAPI", "Status code: ${it.statusCode}")
-                    Log.e("SpotifyAPI", "Response data: ${String(it.data)}")
-                }
-            }
-        ) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer $beaver"
-                headers["Content-Type"] = "application/json"
-                return headers
-            }
-        }
-
-        requestQueue.add(jsonObjectRequest)
-    }
-
-    private fun getArtistInfo() {
-        val artistIds =
-            "2CIMQHirSU0MQqyYHq0eOx,57dN52uHvrHOxijzpIgu3E,1vCWHaC5f2uS3yhpwWbIA6,33qOK5uJ8AR2xuQQAhHump"
-        val url = "https://api.spotify.com/v1/artists?ids=$artistIds"
-
-        val jsonObjectRequest = object : JsonObjectRequest(
-            Request.Method.GET, url, null,
-            { response ->
-                Log.d("SpotifyAPI", "Response: ${response.toString()}")
-
-                try {
-                    val listArtist = mutableListOf<Artist>()
-                    val artistsArray = response.getJSONArray("artists")
-
-                    for (i in 0 until artistsArray.length()) {
-                        val artist = artistsArray.getJSONObject(i)
-                        val artistName = artist.getString("name")
-                        val id = artist.getString("id")
-                        val followers = artist.getJSONObject("followers").getInt("total")
-                        val popularity = artist.getInt("popularity")
-
-                        // Получаем изображение
-                        var imageUrl = ""
-                        val imagesArray = artist.getJSONArray("images")
-                        if (imagesArray.length() > 0) {
-                            val firstImage = imagesArray.getJSONObject(0)
-                            imageUrl = firstImage.getString("url")
-                        }
-                        listArtist.add(Artist(id,artistName, followers, popularity, imageUrl))
-                    }
-
-                    // Устанавливаем адаптер в главном потоке
-                    runOnUiThread {
-                        binding.rvArtist.adapter = ArtistAdapter(listArtist, this@MainActivity)
-                        Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
-                    }
-
-                } catch (e: Exception) {
-                    Log.e("SpotifyAPI", "Error parsing JSON: ${e.message}")
-                    e.printStackTrace()
-                }
-            },
-            { error ->
-                Log.e("SpotifyAPI", "Error: ${error.message}")
-                error.networkResponse?.let {
-                    Log.e("SpotifyAPI", "Status code: ${it.statusCode}")
-                    Log.e("SpotifyAPI", "Response data: ${String(it.data)}")
-                }
-            }
-        ) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer $beaver"
-                headers["Content-Type"] = "application/json"
-                return headers
-            }
-        }
-
-        requestQueue.add(jsonObjectRequest)
-    }
-
-    override fun onClick(artist: Artist) {
-        Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()
-        val intent = Intent(this, MainActivity2::class.java)
-        intent.putExtra("artist", artist)
-        intent.putExtra("beaver",beaver)
-
-        startActivity(intent)
-    }
+//    override fun onClick(artist: Artist) {
+//        Toast.makeText(this, "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()
+//        val intent = Intent(this, MainActivity2::class.java)
+//        intent.putExtra("artist", artist)
+//        intent.putExtra("beaver",beaver)
+//
+//        startActivity(intent)
+//    }
 }

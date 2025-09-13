@@ -96,7 +96,7 @@ class UserFragment : Fragment(), Userdapter.Listener {
         var tarckIdtarckId: String =""
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
         var list = viewModel.favoriteTrackIds.value
-         var token= "BQBl5puIpGtFpvEjrVwetKN1hXwvaTqfh_XDonYsVK-kzkecu6Ny3aHGCPsTTiyeW9yheNgUf4BDjV2eL_T8rlmPtq1NesRJPUbMKgQn2APhMlHYaFGboxqsqcZNGOegVDxBGYWKqF4"
+         var token= "BQBpmCFF5fArL_B6SjxA_bsGQCZzva-tmA4EvLb7uSYfUPHJqUKZMXMIfVv4aYoi0c5JyCRDt3NirZ4MCMxO7RlKvH1Xrj8fQI6RvTaBJCA52ESSorlbHrylUNTxF-H6SA9vx_Jdgc8"
         for (i in list!!) {
             val url = "https://api.spotify.com/v1/tracks/${i.id}"
 

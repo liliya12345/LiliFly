@@ -119,7 +119,7 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-
+                val beaver ="BQBpmCFF5fArL_B6SjxA_bsGQCZzva-tmA4EvLb7uSYfUPHJqUKZMXMIfVv4aYoi0c5JyCRDt3NirZ4MCMxO7RlKvH1Xrj8fQI6RvTaBJCA52ESSorlbHrylUNTxF-H6SA9vx_Jdgc8"
                 headers["Authorization"] = "Bearer $beaver"
                 headers["Content-Type"] = "application/json"
                 return headers

@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient"
-    android:padding="16dp"
     tools:context=".MainActivity">
 
     <!-- Заголовок приложения -->
@@ -30,104 +29,30 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
+        android:layout_marginBottom="15dp"
         android:text="Discover your favorite artists"
         android:textSize="14sp"
+        app:layout_constraintBottom_toTopOf="@+id/fgrm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
 
     <!-- Поисковая панель -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/searchCard"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:cardBackgroundColor="#CDD4D9"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:orientation="horizontal"
-            android:padding="8dp">
-
-            <EditText
-                android:id="@+id/edText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@null"
-                android:ems="10"
-                android:hint="Search artists..."
-                android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:padding="12dp"
-                android:textColor="@color/black" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn"
-                style="@style/Widget.Material3.Button.Icon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="Search"
-                app:backgroundTint="#2A0564"
-                app:cornerRadius="12dp"
-                app:iconGravity="textStart" />
-
-
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
 
     <!-- Заголовок списка артистов -->
-    <TextView
-        android:id="@+id/tvArtistsTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="8dp"
-        android:text="Popular Artists"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchCard" />
 
     <!-- Список артистов -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvArtist"
-        android:layout_width="398dp"
-        android:layout_height="75dp"
-        android:layout_marginTop="16dp"
-        android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvArtistsTitle"
-        app:layout_constraintVertical_bias="0.0"
-        tools:listitem="@layout/artist_item" />
-
 
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fgrm"
         android:name="com.example.lilifly.UserFragment"
-        android:layout_width="390dp"
-        android:layout_height="351dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="396dp"
+        android:layout_height="619dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvArtist" />
+        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
 
     <ImageButton
         android:id="@+id/userBtn"
