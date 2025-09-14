@@ -54,7 +54,6 @@ class UserFragment : Fragment(), Userdapter.Listener {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
         sharedPreferences = requireContext().getSharedPreferences("UserPreferences", MODE_PRIVATE)
-        sharedPreferences = requireContext().getSharedPreferences("UserPreferences", MODE_PRIVATE)
         val id = sharedPreferences.getString("melodyId", null)
         val name = sharedPreferences.getString("melodyName", null)
         val date = sharedPreferences.getString("melodyRelease", null)
@@ -80,15 +79,6 @@ class UserFragment : Fragment(), Userdapter.Listener {
         requestQueue = Volley.newRequestQueue(requireContext())
         binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext())
 
-        // Получаем токен из ViewModel
-        val token = "BQA9rUZL4Of2_rFXjMLYxSNhbWVODyHytEvXDgKjE5qtyj1cFnkyK7K5fd60K5JwW8jxEW3pXQxSo4UXaImVsnBQVdjLw4DVMzhD2N0Fhx7LfQviB5bO3eQAUjVoQlXqVOzZzPw2ZEk"
-
-
-        // Используем правильный ID трека (не artist ID)
-        val trackId = "11dFghVXANMlKmJXsNCbNl" // Это ID трека
-        // Инициализируем ViewModel
-//        viewModel.initSharedPreferences(requireContext())
-
         getTrackInfo()
     }
 
@@ -96,7 +86,8 @@ class UserFragment : Fragment(), Userdapter.Listener {
         var tarckIdtarckId: String =""
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
         var list = viewModel.favoriteTrackIds.value
-         var token= "BQBpmCFF5fArL_B6SjxA_bsGQCZzva-tmA4EvLb7uSYfUPHJqUKZMXMIfVv4aYoi0c5JyCRDt3NirZ4MCMxO7RlKvH1Xrj8fQI6RvTaBJCA52ESSorlbHrylUNTxF-H6SA9vx_Jdgc8"
+        viewModel.data.value
+         var token = sharedPreferences.getString("token", "")
         for (i in list!!) {
             val url = "https://api.spotify.com/v1/tracks/${i.id}"
 
@@ -185,6 +176,12 @@ class UserFragment : Fragment(), Userdapter.Listener {
         Toast.makeText(requireContext(), "Added to favorite: ${track.name}", Toast.LENGTH_SHORT).show()
     }
 
+    override fun onRemove(track: Track) {
+       viewModel.deleteFromFavorite(track)
+        Toast.makeText(requireContext(), "Deleted from favorite: ${track.name}", Toast.LENGTH_SHORT).show()
+
+    }
+
     override fun onStart() {
         super.onStart()
         connectToSpotifyAppRemote()
@@ -224,3 +221,5 @@ class UserFragment : Fragment(), Userdapter.Listener {
         }
     }
 }
+
+

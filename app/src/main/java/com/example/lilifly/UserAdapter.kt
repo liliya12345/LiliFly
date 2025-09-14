@@ -23,8 +23,8 @@ class Userdapter(private val list: List<Track>, private val listener: Listener) 
             binding.playStop.setOnClickListener {
                 listener.onPause(track)
             }
-            binding.addBtn.setOnClickListener {
-                listener.onFavorite(track)
+            binding.removeBtn.setOnClickListener {
+                listener.onRemove(track)
             }
 
 
@@ -60,5 +60,7 @@ class Userdapter(private val list: List<Track>, private val listener: Listener) 
         fun onClick(track: Track)
         fun onPause(track: Track)
         fun onFavorite(track:Track)
+        fun onRemove(track: Track)
+
     }
 }

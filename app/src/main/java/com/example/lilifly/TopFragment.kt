@@ -50,7 +50,7 @@ class TopFragment : Fragment(), TopAdapter.Listener {
 //        var viewModel: DataModel
         requestQueue = Volley.newRequestQueue(requireContext())
         binding.rvTop.layoutManager = LinearLayoutManager(requireContext())
-
+        sharedPreferences = requireContext().getSharedPreferences("UserPreferences", MODE_PRIVATE)
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
 
         val id = viewModel.artistData.value?.id.toString()
@@ -124,7 +124,7 @@ class TopFragment : Fragment(), TopAdapter.Listener {
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                val beaver ="BQBpmCFF5fArL_B6SjxA_bsGQCZzva-tmA4EvLb7uSYfUPHJqUKZMXMIfVv4aYoi0c5JyCRDt3NirZ4MCMxO7RlKvH1Xrj8fQI6RvTaBJCA52ESSorlbHrylUNTxF-H6SA9vx_Jdgc8"
+                val beaver = sharedPreferences.getString("token", "")
                 headers["Authorization"] = "Bearer $beaver"
                 headers["Content-Type"] = "application/json"
                 return headers

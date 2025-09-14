@@ -18,7 +18,7 @@
         android:id="@+id/userCard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#673AB7"
+        android:background="#DCD9D9"
         android:padding="8dp">
 
         <ImageView
@@ -79,21 +79,6 @@
             app:srcCompat="@android:drawable/ic_media_play" />
 
         <ImageButton
-            android:id="@+id/add_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="199dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="2dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/track_img"
-            app:layout_constraintTop_toBottomOf="@+id/releaseDate"
-            app:layout_constraintVertical_bias="0.0"
-            app:srcCompat="@android:drawable/ic_input_add" />
-
-        <ImageButton
             android:id="@+id/play_stop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -105,6 +90,20 @@
             app:layout_constraintStart_toEndOf="@+id/btn_play"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@android:drawable/ic_media_pause" />
+
+        <ImageButton
+            android:id="@+id/remove_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/releaseDate"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

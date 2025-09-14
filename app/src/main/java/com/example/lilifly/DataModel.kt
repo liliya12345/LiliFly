@@ -35,10 +35,21 @@ class DataModel : ViewModel() {
         Log.d("DataModel", "Track added to favorites: $track")
 
     }
+    fun deleteFromFavorite(track: Track) {
+
+        val currentFavorites = favoriteTrackIds.value ?: mutableSetOf()
+        currentFavorites.forEach { i ->
+            if( i.id == track.id){
+                currentFavorites.remove(i)
+                favoriteTrackIds.value = currentFavorites
+            }
 
 
+            Log.d("DataModel", "Track removed from favorites: $track")
+        }
 
 
+    }
 
 
     fun setData(value: String) {

@@ -3,6 +3,7 @@ package com.example.lilifly
 
 import ArtistAdapter
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -33,13 +34,14 @@ class MainActivity : AppCompatActivity() {
     private var spotifyAppRemote: SpotifyAppRemote? = null
     private var beaver = ""
     private lateinit var requestQueue: RequestQueue
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        sharedPreferences = this.getSharedPreferences("UserPreferences", MODE_PRIVATE)
         requestQueue = Volley.newRequestQueue(this)
 //        binding.rvArtist.layoutManager = LinearLayoutManager(this)
         val orientation = resources.configuration.orientation
@@ -105,6 +107,9 @@ class MainActivity : AppCompatActivity() {
             when (response.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     beaver = response.accessToken
+                    val editor = sharedPreferences.edit()
+                    editor.putString("token", beaver)
+                    editor.apply()
                     Log.d("MainActivity", "Success! Token: ${beaver.take(10)}...")
                     connectToSpotifyAppRemote()
 //                    getArtistInfo()

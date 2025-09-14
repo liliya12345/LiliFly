@@ -1,5 +1,7 @@
 package com.example.lilifly
 
+import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -21,6 +23,7 @@ import com.spotify.protocol.types.Track
 class AlbumFragment : Fragment(), AlbumAdapter.Listener {
     private var spotifyAppRemote: SpotifyAppRemote? = null
     private lateinit var binding: Fragment1Binding
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var requestQueue: RequestQueue
     private lateinit var beaver: String
     val listAlbum = mutableListOf<Album>()
@@ -44,13 +47,14 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
 //        var viewModel: DataModel
         requestQueue = Volley.newRequestQueue(requireContext())
         binding.rvAlbum.layoutManager = LinearLayoutManager(requireContext())
-
+        sharedPreferences = requireContext().getSharedPreferences("UserPreferences", MODE_PRIVATE)
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
 
         val id = viewModel.artistData.value?.id.toString()
         val token = viewModel.data.value
         beaver=token.toString()
 
+        val savedToken = sharedPreferences.getString("spotify_token", null)
 
         // Получаем artistId из аргументов или используем дефолтный
 
@@ -119,7 +123,9 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
         ) {
             override fun getHeaders(): MutableMap<String, String> {
                 val headers = HashMap<String, String>()
-                val beaver ="BQBpmCFF5fArL_B6SjxA_bsGQCZzva-tmA4EvLb7uSYfUPHJqUKZMXMIfVv4aYoi0c5JyCRDt3NirZ4MCMxO7RlKvH1Xrj8fQI6RvTaBJCA52ESSorlbHrylUNTxF-H6SA9vx_Jdgc8"
+                viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
+                val token = viewModel.data.value
+                beaver= sharedPreferences.getString("token", "").toString()
                 headers["Authorization"] = "Bearer $beaver"
                 headers["Content-Type"] = "application/json"
                 return headers
