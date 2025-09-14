@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1078678016509",
+    "project_id": "lilifly-c4daf",
+    "storage_bucket": "lilifly-c4daf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1078678016509:android:2c9e1a3fbfcfa6dffc0994",
+        "android_client_info": {
+          "package_name": "com.example.lilifly"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1078678016509-vhen7o3edgil3087o33ja0t82c9n20e9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lilifly",
+            "certificate_hash": "f4ead47f05f3d886bc56aad8fad7a7a335d62b93"
+          }
+        },
+        {
+          "client_id": "1078678016509-8mub8aqj1n5v6t16rpppjq5b8t5genfl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwGOYJPColmPOIV_6x0gmFOg7gMRgXp-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1078678016509-8mub8aqj1n5v6t16rpppjq5b8t5genfl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

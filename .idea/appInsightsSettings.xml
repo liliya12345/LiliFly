@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.lilifly" />
+                  <option name="mobileSdkAppId" value="1:1078678016509:android:2c9e1a3fbfcfa6dffc0994" />
+                  <option name="projectId" value="lilifly-c4daf" />
+                  <option name="projectNumber" value="1078678016509" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

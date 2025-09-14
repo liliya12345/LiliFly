@@ -2,5 +2,11 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
-    id("org.jetbrains.kotlin.plugin.parcelize") version "1.9.0" apply false
+
+
+}
+buildscript {
+    dependencies {
+        classpath("com.google.gms:google-services:4.4.0")  // Add this line
+    }
 }
