@@ -54,6 +54,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
 
+
+
     <ImageButton
         android:id="@+id/userBtn"
         android:layout_width="55dp"
@@ -66,8 +68,10 @@
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toTopOf="@+id/fgrm"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/tvTitle"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/ava99" />
 
     <ImageButton

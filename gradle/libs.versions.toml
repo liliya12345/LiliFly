@@ -14,6 +14,7 @@ volley = "1.2.1"
 cardview = "1.0.0"
 recyclerview = "1.4.0"
 fragment = "1.8.9"
+firebaseDatabaseKtx = "22.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,6 +30,7 @@ volley = { group = "com.android.volley", name = "volley", version.ref = "volley"
 androidx-cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
 androidx-fragment = { group = "androidx.fragment", name = "fragment", version.ref = "fragment" }
+firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

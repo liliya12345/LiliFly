@@ -74,6 +74,8 @@ dependencies {
     implementation(libs.androidx.cardview)
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.fragment)
+//    implementation(libs.firebase.database.ktx)
+//    implementation(libs.firebase.database.ktx)
 
     // Тестирование
     testImplementation(libs.junit)
@@ -85,6 +87,7 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
+    implementation("com.google.firebase:firebase-database")
 
 
 
@@ -93,5 +96,11 @@ dependencies {
     implementation("androidx.credentials:credentials-play-services-auth:1.3.0")
     implementation("com.google.android.libraries.identity.googleid:googleid:1.1.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+
+    //Firebase
+
+
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+
 
 }

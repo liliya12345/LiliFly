@@ -26,6 +26,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
+import com.google.firebase.database.FirebaseDatabase
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var requestQueue: RequestQueue
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var credentialManager: CredentialManager
+//    private lateinit var mDataBase: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +61,8 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE)
         requestQueue = Volley.newRequestQueue(this)
         credentialManager = CredentialManager.create(this)
+        val USER_KEY = "User"
+//        mDataBase = FirebaseDatabase.getInstance().getReference("User")
 
         // Check if we have a valid Spotify token
         val token = sharedPreferences.getString("token", "")
@@ -66,6 +70,7 @@ class MainActivity : AppCompatActivity() {
             // No valid token, start Spotify authentication
             startSpotifyAuth()
         } else {
+            startGoogleSignIn()
             startSpotifyAuth()
             // We have a valid token, connect to Spotify and show content
             connectToSpotifyAppRemote()
@@ -73,8 +78,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         setupNavigation()
-//
-
 
     }
 
@@ -311,6 +314,18 @@ class MainActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     Log.d("Database", "Firebase signInWithCredential:success")
+
+//                    val database = Firebase.database
+//                    val myRef = database.getReference("message")
+//
+//                    myRef.setValue("Hello, World!")
+
+
+
+
+
+
+
                     val user = auth.currentUser
                     Toast.makeText(this, "Google sign-in successful", Toast.LENGTH_SHORT).show()
                 } else {
