@@ -1,9 +1,8 @@
 package com.example.lilifly
+
 import androidx.credentials.Credential
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Configuration
-import android.credentials.GetCredentialException
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -11,9 +10,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.GetCredentialCancellationException
+import androidx.credentials.exceptions.GetCredentialException
+import androidx.credentials.exceptions.NoCredentialException
 import androidx.lifecycle.lifecycleScope
+import com.android.volley.Request
 import kotlinx.coroutines.launch
 import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.lilifly.databinding.ActivityMainBinding
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
@@ -28,6 +32,7 @@ import com.spotify.android.appremote.api.SpotifyAppRemote
 import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,15 +40,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val spotifyClientId = "87f8307bb500473c95c72766f33dadd6"
     private val redirectUri = "com.example.lilifly://callback"
-    private val spotifyRequestCode = 1337 // Код для Spotify
-    private val googleSignInRequestCode = 1338 // УНИКАЛЬНЫЙ код для Google Sign-In
+    private val spotifyRequestCode = 1337
 
     private var spotifyAppRemote: SpotifyAppRemote? = null
-    private var spotifyAccessToken = "" // Переименовал для ясности
     private lateinit var requestQueue: RequestQueue
     private lateinit var sharedPreferences: SharedPreferences
-
-    // Менеджер для нового Credentials API
     private lateinit var credentialManager: CredentialManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,118 +52,123 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        sharedPreferences = this.getSharedPreferences("UserPreferences", MODE_PRIVATE)
-        requestQueue = Volley.newRequestQueue(this)
 
-        // Инициализация Credential Manager
-        credentialManager = CredentialManager.create(this)
-
+        // Initialize Firebase Auth
         auth = Firebase.auth
 
-        // 1. Запускаем аутентификацию в Spotify при старте
-        startSpotifyAuth()
+        sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE)
+        requestQueue = Volley.newRequestQueue(this)
+        credentialManager = CredentialManager.create(this)
 
-        // 2. Настраиваем кнопку для входа через Google
-
-            startGoogleSignIn()
-
-
-        binding.userBtn?.setOnClickListener {
-            val fragment = UserFragment().apply {}
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.fgrm, fragment)
-                .commit()
+        // Check if we have a valid Spotify token
+        val token = sharedPreferences.getString("token", "")
+        if (token.isNullOrEmpty() || isTokenExpired()) {
+            // No valid token, start Spotify authentication
+            startSpotifyAuth()
+        } else {
+            startSpotifyAuth()
+            // We have a valid token, connect to Spotify and show content
+            connectToSpotifyAppRemote()
+            showPopularFragment()
         }
 
-        val fragment = PopularFragment().apply {}
+        setupNavigation()
+//
+
+
+    }
+
+    private fun setupNavigation() {
+        binding.userBtn?.setOnClickListener {
+
+                val fragment = UserFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fgrm, fragment)
+                    .commit()
+
+        }
+
+//        binding.popularBtn?.setOnClickListener {
+//            showPopularFragment()
+//        }
+    }
+
+    private fun showPopularFragment() {
+        val fragment = PopularFragment()
         supportFragmentManager.beginTransaction()
             .replace(R.id.fgrm, fragment)
             .commit()
     }
 
-    // --- НОВЫЙ МЕТОД для запуска Google Sign-In через Credentials API ---
-    private fun startGoogleSignIn() {
-        val googleIdOption = GetGoogleIdOption.Builder()
-            .setServerClientId(getString(R.string.default_web_client_id))
-            .setFilterByAuthorizedAccounts(false) // Изменили на false
-            .build()
-
-        val request = GetCredentialRequest.Builder()
-            .addCredentialOption(googleIdOption)
-            .build()
-
-        lifecycleScope.launch {
-            try {
-                val credentialResponse = credentialManager.getCredential(
-                    context = this@MainActivity,
-                    request = request
-                )
-                handleGoogleSignInCredential(credentialResponse.credential)
-
-            } catch (e:Error) {
-                // Специфичная обработка ошибок аутентификации
-                when (e) {
-                    is androidx.credentials.exceptions.NoCredentialException -> {
-                        Log.w("GoogleSignIn", "No credentials found", e)
-                        // Предложить пользователю добавить аккаунт Google или создать новый
-                        Toast.makeText(this@MainActivity, "Please add a Google account to your device", Toast.LENGTH_LONG).show()
-                    }
-                    is androidx.credentials.exceptions.GetCredentialCancellationException -> {
-                        // Пользователь отменил вход - это нормально, не показываем ошибку
-                        Log.d("GoogleSignIn", "Sign-in cancelled by user")
-                    }
-                    else -> {
-                        Log.e("GoogleSignIn", "Sign-in failed", e)
-                        Toast.makeText(this@MainActivity, "Sign-in failed: ${e.message}", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("GoogleSignIn", "Unexpected error", e)
-                Toast.makeText(this@MainActivity, "Unexpected error during sign-in", Toast.LENGTH_SHORT).show()
-            }
-        }
+    private fun isTokenValid(): Boolean {
+        val token = sharedPreferences.getString("token", "")
+        return !token.isNullOrEmpty() && !isTokenExpired()
     }
 
-    // --- НОВЫЙ МЕТОД для обработки учетных данных от Google ---
-    private fun handleGoogleSignInCredential(credential: Credential) { // androidx.credentials.Credential
-        if (credential is CustomCredential) {
-            if (credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+    private fun isTokenExpired(): Boolean {
+        val expiryTime = sharedPreferences.getLong("token_expiry", 0)
+        return System.currentTimeMillis() >= expiryTime
+    }
+
+    private fun refreshAccessToken() {
+        val refreshToken = sharedPreferences.getString("refresh_token", null)
+        if (refreshToken.isNullOrEmpty()) {
+            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show()
+            startSpotifyAuth()
+            return
+        }
+
+        val url = "https://accounts.spotify.com/api/token"
+        val params = HashMap<String, String>()
+        params["grant_type"] = "refresh_token"
+        params["refresh_token"] = refreshToken
+        params["client_id"] = spotifyClientId
+
+        val request = object : JsonObjectRequest(
+            Request.Method.POST, url, JSONObject(params as Map<*, *>),
+            { response ->
                 try {
-                    val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
-                    val idToken = googleIdTokenCredential.idToken
-                    firebaseAuthWithGoogle(idToken)
+                    val newAccessToken = response.getString("access_token")
+                    val expiresIn = response.getInt("expires_in")
+
+                    with(sharedPreferences.edit()) {
+                        putString("token", newAccessToken)
+                        putLong("token_expiry", System.currentTimeMillis() + (expiresIn * 1000) - 60000)
+                        apply()
+                    }
+
+                    Log.i("TokenRefresh", "Token refreshed successfully")
+                    connectToSpotifyAppRemote()
+
                 } catch (e: Exception) {
-                    Log.e("GoogleSignIn", "Failed to parse Google ID token", e)
+                    Log.e("TokenRefresh", "Error parsing refresh response: ${e.message}")
+                    Toast.makeText(this, "Token refresh failed", Toast.LENGTH_SHORT).show()
+                    startSpotifyAuth()
                 }
+            },
+            { error ->
+                Log.e("TokenRefresh", "Refresh Error: ${error.message}")
+                Toast.makeText(this, "Token refresh failed", Toast.LENGTH_SHORT).show()
+                startSpotifyAuth()
             }
-        } else {
-            Log.e("GoogleSignIn", "Unexpected credential type")
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Content-Type"] = "application/x-www-form-urlencoded"
+                return headers
+            }
         }
+
+        requestQueue.add(request)
     }
 
-    // --- Метод для аутентификации в Firebase (БЕЗ ИЗМЕНЕНИЙ, но теперь он вызывается правильно) ---
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Log.d("Database", "Firebase signInWithCredential:success")
-                    val user = auth.currentUser
-                    // Здесь можно обновить UI, показать имя пользователя и т.д.
-                } else {
-                    Log.w("Database", "Firebase signInWithCredential:failure", task.exception)
-                }
-            }
-    }
-
-    // --- Существующий метод для аутентификации в Spotify (ПЕРЕИМЕНОВАН для ясности) ---
     private fun startSpotifyAuth() {
         val request = AuthorizationRequest.Builder(
             spotifyClientId,
             AuthorizationResponse.Type.TOKEN,
             redirectUri
         )
-            .setScopes(arrayOf("streaming", "user-read-private"))
+            .setScopes(arrayOf("streaming", "user-read-private", "user-read-email"))
             .setShowDialog(true)
             .build()
 
@@ -170,40 +176,43 @@ class MainActivity : AppCompatActivity() {
             AuthorizationClient.openLoginActivity(this, spotifyRequestCode, request)
         } catch (e: Exception) {
             Log.e("MainActivity", "Spotify auth failed: ${e.message}")
+            Toast.makeText(this, "Spotify authentication failed", Toast.LENGTH_SHORT).show()
         }
     }
 
-    // --- onActivityResult - обрабатываем ОБА процесса ---
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // 1. Обработка ответа от Spotify
-        if (requestCode == this.spotifyRequestCode) {
+        if (requestCode == spotifyRequestCode) {
             val response = AuthorizationClient.getResponse(resultCode, data)
             when (response.type) {
                 AuthorizationResponse.Type.TOKEN -> {
-                    spotifyAccessToken = response.accessToken // Сохраняем токен Spotify
-                    // Сохраняем токен Spotify в SharedPreferences
-                    val editor = sharedPreferences.edit()
-                    editor.putString("spotify_token", spotifyAccessToken) // Ключ изменен для ясности
-                    editor.apply()
-                    Log.d("MainActivity", "Spotify Success! Token: ${spotifyAccessToken.take(10)}...")
+                    val accessToken = response.accessToken
+                    val expiresIn = response.expiresIn
+
+                    with(sharedPreferences.edit()) {
+                        putString("token", accessToken)
+                        putString("refresh_token", response.accessToken)
+                        putLong("token_expiry", System.currentTimeMillis() + (expiresIn * 1000) - 60000)
+                        apply()
+                    }
+
+                    Log.d("MainActivity", "Spotify Success! Token received")
                     connectToSpotifyAppRemote()
-                    // НЕ ВЫЗЫВАЕМ firebaseAuthWithGoogle ЗДЕСЬ!
+                    showPopularFragment()
                 }
 
                 AuthorizationResponse.Type.ERROR -> {
                     Log.e("MainActivity", "Spotify Error: ${response.error}")
+                    Toast.makeText(this, "Spotify authentication failed: ${response.error}", Toast.LENGTH_SHORT).show()
                 }
 
                 else -> {
                     Log.d("MainActivity", "Spotify Auth cancelled")
+                    Toast.makeText(this, "Authentication cancelled", Toast.LENGTH_SHORT).show()
                 }
             }
         }
-        // 2. Обработка ответа от Google Sign-In (если бы вы использовали старый API)
-        // Для нового Credentials API это не нужно, т.к. он использует callbackи!
-        // else if (requestCode == googleSignInRequestCode) { ... }
     }
 
     private fun connectToSpotifyAppRemote() {
@@ -220,7 +229,94 @@ class MainActivity : AppCompatActivity() {
 
             override fun onFailure(throwable: Throwable) {
                 Log.e("MainActivity", "Spotify Connection failed: ${throwable.message}")
+                Toast.makeText(this@MainActivity, "Spotify connection failed", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    override fun onStart() {
+        super.onStart()
+        // Reconnect to Spotify when activity resumes
+        if (isTokenValid() && spotifyAppRemote == null) {
+            connectToSpotifyAppRemote()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        SpotifyAppRemote.disconnect(spotifyAppRemote)
+    }
+
+    // Google Sign-In methods (optional - only if you need both auth methods)
+    private fun startGoogleSignIn() {
+        val googleIdOption = GetGoogleIdOption.Builder()
+            .setServerClientId(getString(R.string.default_web_client_id))
+            .setFilterByAuthorizedAccounts(false)
+            .build()
+
+        val request = GetCredentialRequest.Builder()
+            .addCredentialOption(googleIdOption)
+            .build()
+
+        lifecycleScope.launch {
+            try {
+                val credentialResponse = credentialManager.getCredential(
+                    context = this@MainActivity,
+                    request = request
+                )
+                handleGoogleSignInCredential(credentialResponse.credential)
+            } catch (e: GetCredentialException) {
+                handleGoogleSignInError(e)
+            } catch (e: Exception) {
+                Log.e("GoogleSignIn", "Unexpected error", e)
+                Toast.makeText(this@MainActivity, "Unexpected error during sign-in", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun handleGoogleSignInError(e: GetCredentialException) {
+        when (e) {
+            is NoCredentialException -> {
+                Log.w("GoogleSignIn", "No credentials found", e)
+                Toast.makeText(this, "Please add a Google account to your device", Toast.LENGTH_LONG).show()
+            }
+            is GetCredentialCancellationException -> {
+                Log.d("GoogleSignIn", "Sign-in cancelled by user")
+            }
+            else -> {
+                Log.e("GoogleSignIn", "Sign-in failed", e)
+                Toast.makeText(this, "Sign-in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun handleGoogleSignInCredential(credential: Credential) {
+        if (credential is CustomCredential &&
+            credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL) {
+            try {
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                val idToken = googleIdTokenCredential.idToken
+                firebaseAuthWithGoogle(idToken)
+            } catch (e: Exception) {
+                Log.e("GoogleSignIn", "Failed to parse Google ID token", e)
+            }
+        } else {
+            Log.e("GoogleSignIn", "Unexpected credential type")
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Log.d("Database", "Firebase signInWithCredential:success")
+                    val user = auth.currentUser
+                    Toast.makeText(this, "Google sign-in successful", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.w("Database", "Firebase signInWithCredential:failure", task.exception)
+                    Toast.makeText(this, "Google sign-in failed", Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }
