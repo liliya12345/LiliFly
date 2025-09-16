@@ -11,62 +11,49 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTop"
-            android:layout_width="411dp"
-            android:layout_height="449dp"
-            android:layout_marginTop="5dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-            tools:ignore="MissingConstraints" />
-
+        <!-- Artist Image -->
         <ImageView
             android:id="@+id/artistImage"
-            android:layout_width="184dp"
-            android:layout_height="144dp"
-            android:layout_marginTop="62dp"
-            android:layout_marginBottom="89dp"
+            android:layout_width="150dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
             android:contentDescription="Artist image"
             android:elevation="8dp"
             android:scaleType="centerCrop"
-            app:layout_constraintBottom_toTopOf="@+id/rvTop"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <!-- Artist Name -->
         <TextView
             android:id="@+id/artistName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
             android:text="Artist Name"
             android:textColor="@color/white"
-            android:textSize="28sp"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/artistImage" />
 
+        <!-- Stats Container -->
         <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="300dp"
+            android:id="@+id/statsLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal"
-            android:padding="16dp"
             android:weightSum="2"
-            app:layout_constraintBottom_toTopOf="@+id/rvAlbum"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.576"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/artistImage">
+            app:layout_constraintTop_toBottomOf="@+id/artistName">
 
             <!-- Followers -->
             <LinearLayout
@@ -94,7 +81,6 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
-
 
             <!-- Popularity -->
             <LinearLayout
@@ -124,26 +110,32 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <!-- RecyclerView for Tracks -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTop"
+            android:layout_width="426dp"
+            android:layout_height="406dp"
+            android:layout_marginTop="106dp"
+            app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statsLayout" />
+
+        <!-- Bottom Navigation -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rvTop"
+            app:menu="@menu/menu" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-<!-- Artist Image -->
-
-    <!-- Artist Name -->
-
-    <!-- Stats Container -->
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/materialCardView2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:cardBackgroundColor="@color/card_background"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="4dp"
-        app:layout_constraintBottom_toTopOf="@+id/artistName"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </com.google.android.material.card.MaterialCardView>
 
 </FrameLayout>

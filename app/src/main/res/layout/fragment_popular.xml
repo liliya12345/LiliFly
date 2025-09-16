@@ -113,7 +113,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="68dp"
                 android:layout_margin="4dp"
                 android:orientation="horizontal"
                 android:padding="8dp">
@@ -152,32 +152,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="36dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="76dp"
             android:layout_marginEnd="239dp"
-            android:layout_marginBottom="21dp"
             android:text="Popular Artists"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/rvArtist"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchCard" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvArtist"
-            android:layout_width="416dp"
-            android:layout_height="469dp"
-            android:layout_marginBottom="1dp"
+            android:layout_width="398dp"
+            android:layout_height="386dp"
+            android:layout_marginTop="148dp"
             android:clipToPadding="false"
             android:paddingBottom="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/searchCard"
+            tools:listitem="@layout/artist_item" />
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:background="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvArtistsTitle"
-            app:layout_constraintVertical_bias="1.0"
-            tools:listitem="@layout/artist_item" />
+            app:layout_constraintTop_toBottomOf="@+id/rvArtist"
+            app:menu="@menu/menu" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

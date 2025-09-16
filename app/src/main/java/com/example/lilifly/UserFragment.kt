@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -81,7 +82,23 @@ class UserFragment : Fragment(), Userdapter.Listener {
 
         requestQueue = Volley.newRequestQueue(requireContext())
         binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext())
-
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    findNavController().navigate(R.id.popularFragment)
+                    true
+                }
+                R.id.navigation_library -> {
+                    findNavController().navigate(R.id.userFragment)
+                    true
+                }
+                R.id.navigation_profile -> {
+                    findNavController().navigate(R.id.userFragment)
+                    true
+                }
+                else -> false
+            }
+        }
         getTrackInfo()
 
 

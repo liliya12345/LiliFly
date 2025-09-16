@@ -15,24 +15,26 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp">
+            android:layout_height="match_parent">
 
             <!-- Profile Header -->
             <LinearLayout
                 android:id="@+id/profile_header"
-                android:layout_width="395dp"
+                android:layout_width="409dp"
                 android:layout_height="88dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="60dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout6"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/profile_image"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="99dp"
+                    android:layout_height="match_parent"
                     android:contentDescription="Profile image"
                     android:scaleType="centerCrop" />
 
@@ -46,8 +48,8 @@
 
                     <TextView
                         android:id="@+id/user_name"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="157dp"
+                        android:layout_height="match_parent"
                         android:text="User Name"
                         android:textColor="#FFFFFF"
                         android:textSize="24sp"
@@ -55,7 +57,7 @@
 
                     <TextView
                         android:id="@+id/user_email"
-                        android:layout_width="wrap_content"
+                        android:layout_width="141dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="user@email.com"
@@ -76,80 +78,91 @@
             <LinearLayout
                 android:id="@+id/tabs_layout"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="7dp"
+                android:layout_marginBottom="149dp"
                 android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/profile_header">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Profile"
-                        android:textColor="#1DB954"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
-
-                    <View
-                        android:layout_width="40dp"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="4dp"
-                        android:background="#1DB954" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Library"
-                        android:textColor="#B3B3B3"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
+                app:layout_constraintBottom_toTopOf="@+id/playlists_title"
+                app:layout_constraintEnd_toEndOf="@+id/profile_header"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout6"
+                app:layout_constraintTop_toTopOf="parent">
 
             </LinearLayout>
 
             <!-- Playlists Section -->
+
             <TextView
                 android:id="@+id/playlists_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="547dp"
                 android:text="Your Playlists"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tabs_layout" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvPlaylist"
                 android:layout_width="410dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="52dp"
+                android:layout_height="446dp"
+                android:layout_marginBottom="3dp"
+                app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.689"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/playlists_title" />
+                app:layout_constraintTop_toBottomOf="@+id/playlists_title"
+                app:layout_constraintVertical_bias="0.614" />
+
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottomNavigationView"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_marginBottom="3dp"
+                android:background="@color/black"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.538"
+                app:layout_constraintStart_toStartOf="parent"
+                app:menu="@menu/menu" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="58dp"
+                android:layout_marginBottom="24dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toTopOf="@+id/playlists_title"
+                app:layout_constraintStart_toStartOf="@+id/playlists_title"
+                app:layout_constraintTop_toBottomOf="@+id/profile_header">
+
+                <TextView
+                    android:layout_width="73dp"
+                    android:layout_height="wrap_content"
+                    android:text="Profile"
+                    android:textColor="#1DB954"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="2dp"
+                    android:layout_marginTop="4dp"
+                    android:background="#1DB954" />
+
+            </LinearLayout>
 
             <!-- Top Tracks Section -->
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.core.widget.NestedScrollView>
 

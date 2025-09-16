@@ -80,6 +80,31 @@ class PopularFragment : Fragment(), ArtistAdapter.Listener {
         // Получаем artistId из аргументов или используем дефолтный
 
     }
+    private fun setupNavigation() {
+        // Навигация к UserFragment
+        binding.userBtn.setOnClickListener {
+            findNavController().navigate(R.id.action_popularFragment_to_userFragment)
+        }
+
+        // Навигация через BottomNavigationView
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    // Уже на домашнем экране
+                    true
+                }
+                R.id.navigation_library -> {
+                    findNavController().navigate(R.id.action_popularFragment_to_userFragment)
+                    true
+                }
+                R.id.navigation_profile -> {
+                    findNavController().navigate(R.id.action_popularFragment_to_userFragment)
+                    true
+                }
+                else -> false
+            }
+        }
+    }
 
     private fun searchByArtist(qwert: String) {
         val url = "https://api.spotify.com/v1/search?q=$qwert&type=artist"
@@ -205,16 +230,7 @@ class PopularFragment : Fragment(), ArtistAdapter.Listener {
         requestQueue.add(jsonObjectRequest)
     }
 
-    private fun setupNavigation() {
-        binding.userBtn?.setOnClickListener () {
 
-//                runNotify(this)
-            val controller = findNavController()
-            controller.navigate(R.id.userFragment)
-        }
-
-
-    }
     override fun onClick(artist: Artist) {
         Toast.makeText(requireContext(), "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()
         viewModel.setArtist(artist)

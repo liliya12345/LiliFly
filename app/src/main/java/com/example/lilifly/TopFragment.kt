@@ -24,6 +24,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.RequestQueue
@@ -89,6 +90,24 @@ class TopFragment : Fragment(), TopAdapter.Listener {
                 Glide.with(this)
                     .load(artist.imageUrl)
                     .into(binding.artistImage)
+            }
+        }
+
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    findNavController().navigate(R.id.popularFragment)
+                    true
+                }
+                R.id.navigation_library -> {
+                    findNavController().navigate(R.id.userFragment)
+                    true
+                }
+                R.id.navigation_profile -> {
+                    findNavController().navigate(R.id.userFragment)
+                    true
+                }
+                else -> false
             }
         }
 
