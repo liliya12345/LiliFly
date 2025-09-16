@@ -62,5 +62,6 @@ class Userdapter(private val list: List<Track>, private val listener: Listener) 
         fun onFavorite(track:Track)
         fun onRemove(track: Track)
 
+
     }
 }

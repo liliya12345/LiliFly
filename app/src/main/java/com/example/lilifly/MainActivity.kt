@@ -1,12 +1,27 @@
 package com.example.lilifly
 
+import android.Manifest.permission.POST_NOTIFICATIONS
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import androidx.credentials.Credential
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.annotation.RequiresPermission
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -27,6 +42,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.core.view.View
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
 import com.spotify.android.appremote.api.SpotifyAppRemote
@@ -34,6 +50,8 @@ import com.spotify.sdk.android.auth.AuthorizationClient
 import com.spotify.sdk.android.auth.AuthorizationRequest
 import com.spotify.sdk.android.auth.AuthorizationResponse
 import org.json.JSONObject
+import java.util.jar.Manifest
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,6 +65,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var requestQueue: RequestQueue
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var credentialManager: CredentialManager
+
+    val CHANNEL_ID = "my_channel_id"
+    val CHANNEL_NAME = "My Notifications"
+    val CHANNEL_DESCRIPTION = "Notifications from my app"
+    val NOTIFICATION_ID = 1
 //    private lateinit var mDataBase: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         sharedPreferences = getSharedPreferences("UserPreferences", MODE_PRIVATE)
         requestQueue = Volley.newRequestQueue(this)
         credentialManager = CredentialManager.create(this)
+        requestNotificationPermission()
         val USER_KEY = "User"
 //        mDataBase = FirebaseDatabase.getInstance().getReference("User")
 
@@ -77,24 +101,102 @@ class MainActivity : AppCompatActivity() {
             showPopularFragment()
         }
 
+
         setupNavigation()
+        createNotificationChannel()
+
+
 
     }
 
-    private fun setupNavigation() {
-        binding.userBtn?.setOnClickListener {
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(POST_NOTIFICATIONS),
+                    123 // произвольный request code
+                )
+            }
+        }
+    }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelName = "Lilifly Notifications"
+            val importance = NotificationManager.IMPORTANCE_HIGH // Измените на HIGH для лучшей видимости
+
+            val channel = NotificationChannel(CHANNEL_ID, channelName, importance).apply {
+                description = CHANNEL_DESCRIPTION
+                // Дополнительные настройки
+                setShowBadge(true)
+                enableVibration(true)
+                vibrationPattern = longArrayOf(100, 200, 300, 400)
+            }
+
+            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+    @SuppressLint("MissingPermission")
+    fun runNotify(context: Context) {
+        // Проверяем разрешение
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Please allow notifications permission", Toast.LENGTH_SHORT).show()
+                return
+            }
+        }
+
+        val builder = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ava99) // Убедитесь что этот ресурс существует
+            .setContentTitle("Lilifly Music")
+            .setContentText("Your favorite music is waiting for you!")
+            .setPriority(NotificationCompat.PRIORITY_HIGH) // Высокий приоритет
+            .setAutoCancel(true) // Уведомление исчезает при клике
+            .setContentIntent(createPendingIntent()) // Добавляем действие при клике
+
+        with(NotificationManagerCompat.from(this)) {
+            try {
+                notify(NOTIFICATION_ID, builder.build())
+                Log.d("Notification", "Notification shown successfully")
+            } catch (e: Exception) {
+                Log.e("Notification", "Failed to show notification: ${e.message}")
+            }
+        }
+    }
+
+    private fun createPendingIntent(): PendingIntent {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        return PendingIntent.getActivity(
+            this,
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
+    @SuppressLint("MissingPermission")
+    private fun setupNavigation() {
+        binding.userBtn?.setOnClickListener @androidx.annotation.RequiresPermission(android.Manifest.permission.POST_NOTIFICATIONS) {
+                runNotify(this)
                 val fragment = UserFragment()
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.fgrm, fragment)
                     .commit()
-
+            runNotify(this)
         }
 
 //        binding.popularBtn?.setOnClickListener {
 //            showPopularFragment()
 //        }
     }
+
+
+
+
+
 
     private fun showPopularFragment() {
         val fragment = PopularFragment()

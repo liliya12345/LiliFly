@@ -38,7 +38,9 @@ class DataModel : ViewModel() {
     private fun initializeDatabase() {
         val userId = auth.currentUser?.uid
         if (userId != null) {
-            mDataBase = FirebaseDatabase.getInstance()
+            val databaseUrl = "https://lilifly-c4daf-default-rtdb.europe-west1.firebasedatabase.app"
+            mDataBase = FirebaseDatabase.getInstance(databaseUrl)
+
                 .getReference("users")
                 .child(userId)
                 .child("favorites")
@@ -53,7 +55,10 @@ class DataModel : ViewModel() {
     private fun loadFavoritesFromFirebase() {
         val userId = auth.currentUser?.uid
         if (userId != null) {
-            mDataBase = FirebaseDatabase.getInstance()
+
+            val databaseUrl = "https://lilifly-c4daf-default-rtdb.europe-west1.firebasedatabase.app"
+            mDataBase = FirebaseDatabase.getInstance(databaseUrl)
+
                 .getReference("users")
                 .child(userId)
                 .child("favorites")
@@ -125,19 +130,32 @@ class DataModel : ViewModel() {
     }
 
     fun deleteFromFavorite(track: Track) {
+
+        val userId = auth.currentUser?.uid ?: return
         val currentFavorites = favoriteTrackIds.value ?: mutableSetOf()
+        currentFavorites.removeAll { it.id == track.id}
+        favoriteTrackIds.value = currentFavorites
+        val databaseUrl = "https://lilifly-c4daf-default-rtdb.europe-west1.firebasedatabase.app"
+        val database = FirebaseDatabase.getInstance(databaseUrl)
+        val favoritesRef = database.getReference("users").child(userId).child("favorites")
 
-        // Удаляем все треки с таким ID
-        val removed = currentFavorites.removeAll { it.id == track.id }
+        favoritesRef.child(track.id).removeValue()
+            .addOnSuccessListener {
+                Log.i("DataModel", "✅ Track removed from Firebase: $track")
+                // Обновляем локальный список
+                removeFromLocalFavorites(track.id)
+                loadFavoritesFromFirebase()
+            }
+            .addOnFailureListener { e ->
+                Log.e("DataModel", "❌ Failed to remove: ${e.message}")
+            }
+    }
 
-        if (removed) {
-            favoriteTrackIds.value = currentFavorites
-            // Удаляем из Firebase
-            deleteTrackFromFirebase(track.id)
-            Log.d("DataModel", "Track removed from favorites: $track")
-        } else {
-            Log.d("DataModel", "Track not found in favorites: $track")
-        }
+    private fun removeFromLocalFavorites(trackId: String) {
+        val currentFavorites = favoriteTrackIds.value ?: mutableSetOf()
+        currentFavorites.removeAll { it.id == trackId }
+        favoriteTrackIds.value = currentFavorites
+
     }
 
     private fun deleteTrackFromFirebase(trackId: String) {
@@ -166,6 +184,7 @@ class DataModel : ViewModel() {
         val currentFavorites = favoriteTrackIds.value ?: mutableSetOf()
         currentFavorites.removeAll { it.id == trackId }
         favoriteTrackIds.value = currentFavorites
+        loadFavoritesFromFirebase()
     }
 
     // Обновляем базу данных при изменении аутентификации пользователя

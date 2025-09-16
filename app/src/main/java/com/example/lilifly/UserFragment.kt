@@ -1,8 +1,11 @@
 package com.example.lilifly
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.text.LoginFilter
 import android.util.Log
@@ -80,7 +83,14 @@ class UserFragment : Fragment(), Userdapter.Listener {
         binding.rvPlaylist.layoutManager = LinearLayoutManager(requireContext())
 
         getTrackInfo()
+
+
+
+
     }
+
+
+
 
     private fun getTrackInfo( ) {
         var tarckIdtarckId: String =""

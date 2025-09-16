@@ -11,4 +11,7 @@ data class Track(
     var name: String,
     var releaseDate: String = "",
     var imageUrl: String = ""
-) : Parcelable
+) : Parcelable{
+// Пустой конструктор для Firebase
+constructor() : this("", "", "", "")
+}

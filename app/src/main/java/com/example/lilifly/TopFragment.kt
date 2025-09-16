@@ -1,8 +1,17 @@
 package com.example.lilifly
 
 import User
+import android.Manifest.permission.POST_NOTIFICATIONS
+import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +19,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
@@ -30,8 +43,13 @@ class TopFragment : Fragment(), TopAdapter.Listener {
     private lateinit var requestQueue: RequestQueue
     private lateinit var beaver: String
     val trackList = mutableListOf<Track>()
+    var followers: Int =0
     private lateinit var viewModel: DataModel
     var isPlaying: Boolean = true
+    val CHANNEL_ID = "my_channel_id"
+    val CHANNEL_NAME = "My Notifications"
+    val CHANNEL_DESCRIPTION = "Notifications from my app"
+    val NOTIFICATION_ID = 2
 
 
 //    val  beaver= arguments?.getString("beaver")
@@ -54,17 +72,76 @@ class TopFragment : Fragment(), TopAdapter.Listener {
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
 
         val id = viewModel.artistData.value?.id.toString()
+        followers = viewModel.artistData.value?.followers?.toInt() ?: 0
         val token = viewModel.data.value
-        beaver=token.toString()
+        beaver = token.toString()
 
 
-        // Получаем artistId из аргументов или используем дефолтный
+
 
         getTrackInfo(id)
 
 
+    }
 
+    private fun createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channelName = "Lilifly Notifications"
+            val importance =
+                NotificationManager.IMPORTANCE_HIGH // Измените на HIGH для лучшей видимости
 
+            val channel = NotificationChannel(CHANNEL_ID, channelName, importance).apply {
+                description = CHANNEL_DESCRIPTION
+                // Дополнительные настройки
+                setShowBadge(true)
+                enableVibration(true)
+                vibrationPattern = longArrayOf(100, 200, 300, 400)
+            }
+            val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+    }
+
+    @SuppressLint("MissingPermission")
+    fun runNotify(context: Context) {
+        // Проверяем разрешение
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                // Если разрешения нет, просто выходим
+                Log.d("Notification", "Notification permission not granted")
+                return
+            }
+        }
+        val builder = NotificationCompat.Builder(requireContext(), CHANNEL_ID)
+            .setSmallIcon(R.drawable.ava99)
+            .setContentTitle("Super artist with ${followers} followers")
+            .setContentText("Track added to favorites!")
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+            .setContentIntent(createPendingIntent())
+
+        try {
+            with(NotificationManagerCompat.from(requireContext())) {
+                notify(NOTIFICATION_ID, builder.build())
+                Log.d("Notification", "Notification shown successfully")
+            }
+        } catch (e: Exception) {
+            Log.e("Notification", "Failed to show notification: ${e.message}")
+            // Показываем Toast если уведомление не работает
+            Toast.makeText(requireContext(), "Track added to favorites!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun createPendingIntent(): PendingIntent {
+        val intent = Intent(requireContext(), MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        return PendingIntent.getActivity(
+            requireContext(),
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
     }
 
     private fun getTrackInfo(artistId: String) {
@@ -139,6 +216,7 @@ class TopFragment : Fragment(), TopAdapter.Listener {
         playMusic(track)
 
     }
+
     override fun onPause(track: Track) {
         Log.i("Music", "hello")
         spotifyAppRemote?.let { appRemote ->
@@ -162,9 +240,12 @@ class TopFragment : Fragment(), TopAdapter.Listener {
         editor.putString("melodyImg", track.imageUrl)
         editor.apply()
 
-        Toast.makeText(requireContext(), "Added to favorite: ${track.name}", Toast.LENGTH_SHORT).show()
+        Toast.makeText(requireContext(), "Added to favorite: ${track.name}", Toast.LENGTH_SHORT)
+            .show()
 
-    }
+        if(followers>2000000){
+        runNotify(requireContext())
+    }}
 
 
     override fun onStart() {
@@ -202,16 +283,13 @@ class TopFragment : Fragment(), TopAdapter.Listener {
     private fun playMusic(track: Track) {
         spotifyAppRemote?.let { appRemote ->
             val playlistURI = "spotify:track:${track.id}"
-                appRemote.playerApi.play(playlistURI)
-
+            appRemote.playerApi.play(playlistURI)
 
 
         }
 
 
     }
-
-
 
 
 }
