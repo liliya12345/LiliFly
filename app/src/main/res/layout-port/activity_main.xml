@@ -8,81 +8,16 @@
     android:background="@drawable/bg_gradient"
     tools:context=".MainActivity">
 
-    <!-- Заголовок приложения -->
-
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="95dp"
-        android:layout_height="39dp"
-        android:layout_marginTop="24dp"
-        android:text="Lilifly"
-        android:textColor="@color/material_dynamic_neutral80"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.549"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/tvSubtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="15dp"
-        android:text="Discover your favorite artists"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/fgrm"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
-
-    <!-- Поисковая панель -->
-
-    <!-- Заголовок списка артистов -->
-
-    <!-- Список артистов -->
-
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fgrm"
-        android:name="com.example.lilifly.UserFragment"
-        android:layout_width="396dp"
-        android:layout_height="619dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />
-
-    <ImageButton
-        android:id="@+id/userBtn"
-        android:layout_width="55dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginEnd="81dp"
-        android:layout_marginBottom="14dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toTopOf="@+id/tvSubtitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tvTitle"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ava99" />
-
-
-
-    <ImageButton
-        android:id="@+id/imageButton15"
+        android:id="@+id/fragmentContainerView2"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="132dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="8dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitCenter"
-        app:layout_constraintEnd_toStartOf="@+id/tvTitle"
+        app:defaultNavHost="true"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@android:drawable/btn_star_big_on" />
+        app:navGraph="@navigation/nav_main"
+        tools:layout_editor_absoluteY="87dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

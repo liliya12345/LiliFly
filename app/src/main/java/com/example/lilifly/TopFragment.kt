@@ -29,6 +29,7 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import com.example.lilifly.databinding.Fragment2Binding
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
@@ -72,11 +73,24 @@ class TopFragment : Fragment(), TopAdapter.Listener {
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
 
         val id = viewModel.artistData.value?.id.toString()
+        val artist = viewModel.artistData.value
         followers = viewModel.artistData.value?.followers?.toInt() ?: 0
         val token = viewModel.data.value
         beaver = token.toString()
 
+        if (artist != null) {
+            Log.i("artist", "onCreate: ${artist.name}")
+            Toast.makeText(requireContext(), "Artist: ${artist.name}", Toast.LENGTH_LONG).show()
 
+            binding.artistName.text = artist.name
+            binding.followersCount?.text = artist.followers.toString()
+            binding.popularityScore?.text = artist.popularity.toString()
+            if (artist.imageUrl.isNotEmpty()) {
+                Glide.with(this)
+                    .load(artist.imageUrl)
+                    .into(binding.artistImage)
+            }
+        }
 
 
         getTrackInfo(id)

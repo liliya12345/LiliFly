@@ -18,18 +18,98 @@
 
         <!-- Заголовок списка артистов -->
 
+        <!-- Список артистов -->
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="95dp"
+            android:layout_height="39dp"
+            android:layout_marginTop="24dp"
+            android:text="Lilifly"
+            android:textColor="@color/material_dynamic_neutral80"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.549"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Поисковая панель -->
+
+        <!-- Заголовок списка артистов -->
+
+        <!-- Список артистов -->
+
+
+        <!--    <androidx.fragment.app.FragmentContainerView-->
+        <!--        android:id="@+id/fgrm"-->
+        <!--        android:name="com.example.lilifly.UserFragment"-->
+        <!--        android:layout_width="396dp"-->
+        <!--        android:layout_height="619dp"-->
+        <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--        app:layout_constraintEnd_toEndOf="parent"-->
+        <!--        app:layout_constraintStart_toStartOf="parent"-->
+        <!--        app:layout_constraintTop_toBottomOf="@+id/tvSubtitle" />-->
+
+        <TextView
+            android:id="@+id/tvSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="9dp"
+            android:text="Discover your favorite artists"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/searchCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+        <ImageButton
+            android:id="@+id/userBtn"
+            android:layout_width="55dp"
+            android:layout_height="57dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginEnd="81dp"
+            android:layout_marginBottom="14dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toTopOf="@+id/tvSubtitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tvTitle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ava99" />
+
+
+
+        <ImageButton
+            android:id="@+id/imageButton15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="132dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toStartOf="@+id/tvTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:drawable/btn_star_big_on" />
+
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/searchCard"
             android:layout_width="396dp"
             android:layout_height="68dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="28dp"
             app:cardBackgroundColor="#CDD4D9"
             app:cardCornerRadius="16dp"
             app:cardElevation="4dp"
+            app:layout_constraintBottom_toTopOf="@+id/tvArtistsTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/tvSubtitle">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,26 +147,27 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Список артистов -->
-
-
         <TextView
             android:id="@+id/tvArtistsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="44dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="239dp"
+            android:layout_marginBottom="21dp"
             android:text="Popular Artists"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/rvArtist"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchCard" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvArtist"
-            android:layout_width="407dp"
-            android:layout_height="477dp"
+            android:layout_width="416dp"
+            android:layout_height="469dp"
             android:layout_marginBottom="1dp"
             android:clipToPadding="false"
             android:paddingBottom="0dp"

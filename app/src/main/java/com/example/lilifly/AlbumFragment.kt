@@ -8,12 +8,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import com.example.lilifly.databinding.Fragment1Binding
 import com.spotify.android.appremote.api.ConnectionParams
 import com.spotify.android.appremote.api.Connector
@@ -38,6 +41,7 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
         savedInstanceState: Bundle?
     ): View? {
         binding = Fragment1Binding.inflate(inflater, container, false)
+
         return binding.root
     }
 
@@ -51,12 +55,31 @@ class AlbumFragment : Fragment(), AlbumAdapter.Listener {
         viewModel = ViewModelProvider(requireActivity())[DataModel::class.java]
 
         val id = viewModel.artistData.value?.id.toString()
+        val artist = viewModel.artistData.value
         val token = viewModel.data.value
         beaver=token.toString()
 
         val savedToken = sharedPreferences.getString("spotify_token", null)
 
         // Получаем artistId из аргументов или используем дефолтный
+
+        if (artist != null) {
+            Log.i("artist", "onCreate: ${artist.name}")
+            Toast.makeText(requireContext(), "Artist: ${artist.name}", Toast.LENGTH_LONG).show()
+
+            binding.artistName.text = artist.name
+            binding.followersCount?.text = artist.followers.toString()
+            binding.popularityScore?.text = artist.popularity.toString()
+            if (artist.imageUrl.isNotEmpty()) {
+                Glide.with(this)
+                    .load(artist.imageUrl)
+                    .into(binding.artistImage)
+            }
+        }
+        binding.topbtn.setOnClickListener {
+            val controller = findNavController()
+            controller.navigate(R.id.topFragment)
+        }
 
         getAlbumInfo(id)
 

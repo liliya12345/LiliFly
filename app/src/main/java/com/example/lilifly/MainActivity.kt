@@ -98,11 +98,11 @@ class MainActivity : AppCompatActivity() {
             startSpotifyAuth()
             // We have a valid token, connect to Spotify and show content
             connectToSpotifyAppRemote()
-            showPopularFragment()
+//            showPopularFragment()
         }
 
 
-        setupNavigation()
+//        setupNavigation()
         createNotificationChannel()
 
 
@@ -177,33 +177,33 @@ class MainActivity : AppCompatActivity() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
     }
-    @SuppressLint("MissingPermission")
-    private fun setupNavigation() {
-        binding.userBtn?.setOnClickListener @androidx.annotation.RequiresPermission(android.Manifest.permission.POST_NOTIFICATIONS) {
-                runNotify(this)
-                val fragment = UserFragment()
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fgrm, fragment)
-                    .commit()
-            runNotify(this)
-        }
+//    @SuppressLint("MissingPermission")
+//    private fun setupNavigation() {
+//        binding.userBtn?.setOnClickListener @androidx.annotation.RequiresPermission(android.Manifest.permission.POST_NOTIFICATIONS) {
+//                runNotify(this)
+////                val fragment = UserFragment()
+////                supportFragmentManager.beginTransaction()
+////                    .replace(R.id.fgrm, fragment)
+////                    .commit()
+////            runNotify(this)
+//        }
 
 //        binding.popularBtn?.setOnClickListener {
 //            showPopularFragment()
 //        }
-    }
+//    }
 
 
 
 
 
 
-    private fun showPopularFragment() {
-        val fragment = PopularFragment()
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fgrm, fragment)
-            .commit()
-    }
+//    private fun showPopularFragment() {
+//        val fragment = PopularFragment()
+//        supportFragmentManager.beginTransaction()
+//            .replace(R.id.fgrm, fragment)
+//            .commit()
+//    }
 
     private fun isTokenValid(): Boolean {
         val token = sharedPreferences.getString("token", "")
@@ -304,7 +304,7 @@ class MainActivity : AppCompatActivity() {
 
                     Log.d("MainActivity", "Spotify Success! Token received")
                     connectToSpotifyAppRemote()
-                    showPopularFragment()
+//                    showPopularFragment()
                 }
 
                 AuthorizationResponse.Type.ERROR -> {

@@ -13,11 +13,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import com.example.lilifly.databinding.Fragment1Binding
 import com.example.lilifly.databinding.FragmentPopularBinding
 import com.spotify.android.appremote.api.ConnectionParams
@@ -63,7 +66,7 @@ class PopularFragment : Fragment(), ArtistAdapter.Listener {
         val id = viewModel.artistData.value?.id.toString()
         val token = viewModel.data.value
         beaver = token.toString()
-        val  viewModel = ViewModelProvider(this)[DataModel::class.java]
+        val viewModel = ViewModelProvider(this)[DataModel::class.java]
 
         getArtistInfo()
         binding.btn.setOnClickListener {
@@ -71,7 +74,7 @@ class PopularFragment : Fragment(), ArtistAdapter.Listener {
             searchByArtist(search.toString())
 
         }
-
+        setupNavigation()
 
 
         // Получаем artistId из аргументов или используем дефолтный
@@ -108,8 +111,8 @@ class PopularFragment : Fragment(), ArtistAdapter.Listener {
 
                     // Устанавливаем адаптер в главном потоке
 
-                        binding.rvArtist.adapter = ArtistAdapter(listArtist, this@PopularFragment)
-                        Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
+                    binding.rvArtist.adapter = ArtistAdapter(listArtist, this@PopularFragment)
+                    Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
 
 
                 } catch (e: Exception) {
@@ -170,8 +173,8 @@ class PopularFragment : Fragment(), ArtistAdapter.Listener {
 
                     // Устанавливаем адаптер в главном потоке
 
-                        binding.rvArtist.adapter = ArtistAdapter(listArtist, this@PopularFragment)
-                        Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
+                    binding.rvArtist.adapter = ArtistAdapter(listArtist, this@PopularFragment)
+                    Log.d("RecyclerView", "Adapter set with ${listArtist.size} items")
 
 
                 } catch (e: Exception) {
@@ -202,13 +205,28 @@ class PopularFragment : Fragment(), ArtistAdapter.Listener {
         requestQueue.add(jsonObjectRequest)
     }
 
+    private fun setupNavigation() {
+        binding.userBtn?.setOnClickListener () {
+
+//                runNotify(this)
+            val controller = findNavController()
+            controller.navigate(R.id.userFragment)
+        }
+
+
+    }
     override fun onClick(artist: Artist) {
         Toast.makeText(requireContext(), "Artist: ${artist.name}", Toast.LENGTH_SHORT).show()
+        viewModel.setArtist(artist)
 
-        val intent = Intent(requireContext(), MainActivity2::class.java)
-        intent.putExtra("artist", artist)
-        intent.putExtra("beaver", beaver)
-        startActivity(intent)
+        val controller = findNavController()
+        controller.navigate(R.id.albumFragment)
+
+
+//        val intent = Intent(requireContext(), MainActivity2::class.java)
+//        intent.putExtra("artist", artist)
+//        intent.putExtra("beaver", beaver)
+//        startActivity(intent)
 
     }
 }
