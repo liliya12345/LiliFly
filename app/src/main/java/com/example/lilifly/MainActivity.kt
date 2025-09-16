@@ -290,10 +290,12 @@ class MainActivity : AppCompatActivity() {
 
         if (requestCode == spotifyRequestCode) {
             val response = AuthorizationClient.getResponse(resultCode, data)
+
             when (response.type) {
                 AuthorizationResponse.Type.TOKEN -> {
                     val accessToken = response.accessToken
                     val expiresIn = response.expiresIn
+
 
                     with(sharedPreferences.edit()) {
                         putString("token", accessToken)
