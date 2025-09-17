@@ -89,17 +89,16 @@ class MainActivity : AppCompatActivity() {
 //        mDataBase = FirebaseDatabase.getInstance().getReference("User")
 
         // Check if we have a valid Spotify token
-        val token = sharedPreferences.getString("token", "")
-        if (token.isNullOrEmpty() || isTokenExpired()) {
+//        val token = sharedPreferences.getString("token", "")
+
             // No valid token, start Spotify authentication
-            startSpotifyAuth()
-        } else {
+
             startGoogleSignIn()
             startSpotifyAuth()
             // We have a valid token, connect to Spotify and show content
             connectToSpotifyAppRemote()
 //            showPopularFragment()
-        }
+
 
 
 //        setupNavigation()
@@ -205,67 +204,7 @@ class MainActivity : AppCompatActivity() {
 //            .commit()
 //    }
 
-    private fun isTokenValid(): Boolean {
-        val token = sharedPreferences.getString("token", "")
-        return !token.isNullOrEmpty() && !isTokenExpired()
-    }
 
-    private fun isTokenExpired(): Boolean {
-        val expiryTime = sharedPreferences.getLong("token_expiry", 0)
-        return System.currentTimeMillis() >= expiryTime
-    }
-
-    private fun refreshAccessToken() {
-        val refreshToken = sharedPreferences.getString("refresh_token", null)
-        if (refreshToken.isNullOrEmpty()) {
-            Toast.makeText(this, "Please login again", Toast.LENGTH_SHORT).show()
-            startSpotifyAuth()
-            return
-        }
-
-        val url = "https://accounts.spotify.com/api/token"
-        val params = HashMap<String, String>()
-        params["grant_type"] = "refresh_token"
-        params["refresh_token"] = refreshToken
-        params["client_id"] = spotifyClientId
-
-        val request = object : JsonObjectRequest(
-            Request.Method.POST, url, JSONObject(params as Map<*, *>),
-            { response ->
-                try {
-                    val newAccessToken = response.getString("access_token")
-                    val expiresIn = response.getInt("expires_in")
-
-                    with(sharedPreferences.edit()) {
-                        putString("token", newAccessToken)
-                        putLong("token_expiry", System.currentTimeMillis() + (expiresIn * 1000) - 60000)
-                        apply()
-                    }
-
-                    Log.i("TokenRefresh", "Token refreshed successfully")
-                    connectToSpotifyAppRemote()
-
-                } catch (e: Exception) {
-                    Log.e("TokenRefresh", "Error parsing refresh response: ${e.message}")
-                    Toast.makeText(this, "Token refresh failed", Toast.LENGTH_SHORT).show()
-                    startSpotifyAuth()
-                }
-            },
-            { error ->
-                Log.e("TokenRefresh", "Refresh Error: ${error.message}")
-                Toast.makeText(this, "Token refresh failed", Toast.LENGTH_SHORT).show()
-                startSpotifyAuth()
-            }
-        ) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Content-Type"] = "application/x-www-form-urlencoded"
-                return headers
-            }
-        }
-
-        requestQueue.add(request)
-    }
 
     private fun startSpotifyAuth() {
         val request = AuthorizationRequest.Builder(
@@ -344,9 +283,9 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         // Reconnect to Spotify when activity resumes
-        if (isTokenValid() && spotifyAppRemote == null) {
+
             connectToSpotifyAppRemote()
-        }
+
     }
 
     override fun onStop() {
@@ -373,7 +312,7 @@ class MainActivity : AppCompatActivity() {
                 )
                 handleGoogleSignInCredential(credentialResponse.credential)
             } catch (e: GetCredentialException) {
-                handleGoogleSignInError(e)
+                Log.e("CredentialException", "Unexpected error", e)
             } catch (e: Exception) {
                 Log.e("GoogleSignIn", "Unexpected error", e)
                 Toast.makeText(this@MainActivity, "Unexpected error during sign-in", Toast.LENGTH_SHORT).show()
@@ -381,21 +320,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleGoogleSignInError(e: GetCredentialException) {
-        when (e) {
-            is NoCredentialException -> {
-                Log.w("GoogleSignIn", "No credentials found", e)
-                Toast.makeText(this, "Please add a Google account to your device", Toast.LENGTH_LONG).show()
-            }
-            is GetCredentialCancellationException -> {
-                Log.d("GoogleSignIn", "Sign-in cancelled by user")
-            }
-            else -> {
-                Log.e("GoogleSignIn", "Sign-in failed", e)
-                Toast.makeText(this, "Sign-in failed: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
 
     private fun handleGoogleSignInCredential(credential: Credential) {
         if (credential is CustomCredential &&

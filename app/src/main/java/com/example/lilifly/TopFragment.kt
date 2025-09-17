@@ -97,7 +97,7 @@ class TopFragment : Fragment(), TopAdapter.Listener {
             when (item.itemId) {
                 R.id.navigation_home -> {
                     findNavController().navigate(R.id.popularFragment)
-                    true
+                    findNavController().popBackStack(R.id.popularFragment, false)
                 }
                 R.id.navigation_library -> {
                     findNavController().navigate(R.id.userFragment)
