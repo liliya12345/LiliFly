@@ -1,4 +1,4 @@
-Technical Implementation Report: Lilifly Music Application
+ Lilifly Music Application
 The Lilifly music application was developed as an Android native application using Kotlin, integrating multiple APIs and services to create a comprehensive music streaming experience.
 
 Technical Architecture
